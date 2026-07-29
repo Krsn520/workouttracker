@@ -262,7 +262,7 @@
 
   .modal-session-row{display:flex;gap:24px;align-items:flex-end;margin-bottom:20px;flex-wrap:wrap;}
   .modal-session-row .field{flex:0 0 auto;}
-  #modalDateSelect{width:170px;font-weight:700;}
+  #modalDateInput{width:170px;font-weight:700;}
   .session-name-display{font-size:19px;font-weight:800;letter-spacing:-0.2px;padding:10px 0;}
 
   .type-toggle-full{display:flex;gap:0;border-radius:11px;overflow:hidden;margin-bottom:18px;border:1px solid var(--border);}
@@ -317,7 +317,7 @@
     .session-row{flex-wrap:wrap;}
     .modal-panel{padding:20px;}
     .modal-session-row{flex-direction:column;align-items:stretch;gap:12px;}
-    #modalDateSelect{width:100%;}
+    #modalDateInput{width:100%;}
   }
   @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;}}
 
@@ -403,8 +403,12 @@
         <svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>Add Exercise
       </button>
     </div>
-    <div class="two-col">
-      <div class="card">
+    <div class="pill-toggle" id="libraryTypeToggle" style="margin-bottom:14px;">
+      <button type="button" data-libtype="strength" class="active">Weight</button>
+      <button type="button" data-libtype="cardio">Cardio</button>
+    </div>
+    <div>
+      <div class="card" id="strengthLibraryCard">
         <h3 style="font-size:17px;">Strength exercises</h3>
         <table class="deftable" id="strengthTable">
           <thead><tr><th>Name</th><th>Area</th><th>Weight</th><th>Scheme (A×B)</th><th></th></tr></thead>
@@ -416,7 +420,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card hidden" id="cardioLibraryCard">
         <h3 style="font-size:17px;">Cardio exercises</h3>
         <table class="deftable" id="cardioTable">
           <thead><tr><th>Name</th><th>Distance</th><th>Time</th><th></th></tr></thead>
@@ -484,12 +488,12 @@
 
     <div class="modal-session-row">
       <div class="field">
-        <label for="modalDateSelect">Session</label>
-        <select id="modalDateSelect"></select>
+        <label for="modalDateInput">Date</label>
+        <input type="date" id="modalDateInput">
       </div>
       <div class="field">
-        <label>Session name</label>
-        <div class="session-name-display" id="modalSessionName">—</div>
+        <label for="modalSessionNameInput">Session name</label>
+        <input type="text" id="modalSessionNameInput" placeholder="e.g. Push Day" maxlength="60">
       </div>
     </div>
 
@@ -638,6 +642,7 @@
   let entries = [];
   let exDefs = [];
   let presets = [];
+  let sessionNames = {};
   let logType = "strength";
   let modalDate = null;
   let editingEntryId = null;
@@ -692,6 +697,7 @@
     try{ const r = await window.storage.get("entries", false); entries = r&&r.value ? JSON.parse(r.value) : []; }catch(e){ entries = []; }
     try{ const r = await window.storage.get("exercise_defs", false); exDefs = r&&r.value ? JSON.parse(r.value) : []; }catch(e){ exDefs = []; }
     try{ const r = await window.storage.get("presets", false); presets = r&&r.value ? JSON.parse(r.value) : []; }catch(e){ presets = []; }
+    try{ const r = await window.storage.get("session_names", false); sessionNames = r&&r.value ? JSON.parse(r.value) : {}; }catch(e){ sessionNames = {}; }
   }
 
   const sleep = (ms) => new Promise(r=>setTimeout(r, ms));
@@ -709,6 +715,7 @@
   async function saveEntries(){ const ok = await saveToStorage("entries", JSON.stringify(entries)); if(!ok) toast("Couldn't save — try again"); }
   async function saveDefs(){ const ok = await saveToStorage("exercise_defs", JSON.stringify(exDefs)); if(!ok) toast("Couldn't save — try again"); }
   async function savePresets(){ const ok = await saveToStorage("presets", JSON.stringify(presets)); if(!ok) toast("Couldn't save — try again"); }
+  async function saveSessionNames(){ const ok = await saveToStorage("session_names", JSON.stringify(sessionNames)); if(!ok) toast("Couldn't save — try again"); }
 
   // ---------- tabs ----------
   $$("nav.pillnav button").forEach(btn=>{
@@ -765,7 +772,38 @@
   overlay.addEventListener("click", (e)=>{ if(e.target === overlay) closeModal(); });
 
   $("#newToggleBtn").addEventListener("click", ()=> openModal(todayISO(), {expandPreset:false}));
-  $("#generateToggleBtn").addEventListener("click", ()=> openModal(todayISO(), {expandPreset:true}));
+  $("#generateToggleBtn").addEventListener("click", ()=> generateSessionFromPresets());
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  async function generateSessionFromPresets(){
+    const pool = exDefs.slice();
+    if(pool.length===0){
+      toast("Add some exercises to your library first");
+      openModal(todayISO(), {expandPreset:true});
+      return;
+    }
+    const picks = shuffle(pool).slice(0, Math.min(5, pool.length));
+    const date = todayISO();
+    picks.forEach(d=>{
+      if(d.type==="strength"){
+        addEntryDirect({type:"strength", name:d.name, date, sets:d.sets||3, reps:d.reps||8, weight:d.weight||0, distance:0, time:0, area_display:d.area});
+      }else{
+        addEntryDirect({type:"cardio", name:d.name, date, sets:0, reps:0, weight:0, distance:d.distance||0, time:d.time||0});
+      }
+    });
+    await saveEntries();
+    renderSessions();
+    openModal(date, {expandPreset:false});
+    toast(`Generated a session with ${picks.length} exercise${picks.length===1?"":"s"}`);
+  }
 
   presetHead.addEventListener("click", ()=>{
     const nowHidden = presetBody.classList.toggle("hidden");
@@ -774,20 +812,40 @@
   });
 
   function populateModalDateSelect(){
-    const dates = new Set(entries.map(e=>e.date));
-    dates.add(modalDate);
-    dates.add(todayISO());
-    const list = [...dates].sort((a,b)=>b.localeCompare(a));
-    const sel = $("#modalDateSelect");
-    sel.innerHTML = list.map(d=>`<option value="${d}">${d===todayISO()?d+" (Today)":d}</option>`).join("");
-    sel.value = modalDate;
-    $("#modalSessionName").textContent = modalDate;
+    $("#modalDateInput").value = modalDate;
+    $("#modalSessionNameInput").value = sessionNames[modalDate] || "";
   }
-  $("#modalDateSelect").addEventListener("change", ()=>{
-    modalDate = $("#modalDateSelect").value;
-    $("#modalSessionName").textContent = modalDate;
+
+  async function changeModalSessionDate(newDate){
+    if(!newDate || newDate === modalDate) return;
+    const oldDate = modalDate;
+    // move any entries logged under the old date to the new date (corrects the date it occurred on)
+    let moved = false;
+    entries.forEach(e=>{ if(e.date === oldDate){ e.date = newDate; moved = true; } });
+    // carry the session name over to the new date
+    if(sessionNames[oldDate] !== undefined){
+      if(!sessionNames[newDate]) sessionNames[newDate] = sessionNames[oldDate];
+      delete sessionNames[oldDate];
+    }
+    modalDate = newDate;
+    if(moved) await saveEntries();
+    await saveSessionNames();
+    $("#modalSessionNameInput").value = sessionNames[modalDate] || "";
     renderLoggedList();
+    renderSessions();
+  }
+  $("#modalDateInput").addEventListener("change", ()=>{
+    changeModalSessionDate($("#modalDateInput").value);
   });
+
+  async function persistModalSessionName(){
+    const val = $("#modalSessionNameInput").value.trim();
+    if(val){ sessionNames[modalDate] = val; } else { delete sessionNames[modalDate]; }
+    await saveSessionNames();
+    renderSessions();
+  }
+  $("#modalSessionNameInput").addEventListener("change", persistModalSessionName);
+  $("#modalSessionNameInput").addEventListener("blur", persistModalSessionName);
 
   // ---------- type toggle (inside modal) ----------
   $("#typeToggle").addEventListener("click", (e)=>{
@@ -958,6 +1016,7 @@
 
   async function deleteDay(date){
     entries = entries.filter(e=>e.date!==date);
+    if(sessionNames[date] !== undefined){ delete sessionNames[date]; await saveSessionNames(); }
     await saveEntries();
     renderSessions();
     toast("Session deleted");
@@ -997,10 +1056,11 @@
       const strengthCount = rows.filter(r=>r.type==="strength").length;
       const cardioCount = rows.filter(r=>r.type==="cardio").length;
       const collapsed = collapsedDates.has(date);
+      const customName = sessionNames[date];
       return `<div class="session-card" data-date="${date}">
         <div class="session-head" data-toggle="${date}">
           <div>
-            <div class="session-date">${date}</div>
+            <div class="session-date">${customName ? escapeHtml(customName) : date}</div>
             <div class="session-sub">${formatDate(date)}</div>
           </div>
           <div class="session-meta">
@@ -1366,7 +1426,23 @@
     toast("Exercise removed");
   }
 
+  let libraryViewType = "strength";
+
+  function applyLibraryToggleView(){
+    $("#strengthLibraryCard").classList.toggle("hidden", libraryViewType!=="strength");
+    $("#cardioLibraryCard").classList.toggle("hidden", libraryViewType!=="cardio");
+    $$("#libraryTypeToggle button").forEach(b=> b.classList.toggle("active", b.dataset.libtype===libraryViewType));
+  }
+
+  $$("#libraryTypeToggle button").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      libraryViewType = btn.dataset.libtype;
+      applyLibraryToggleView();
+    });
+  });
+
   function renderPresetsTab(){
+    applyLibraryToggleView();
     const strengthDefs = exDefs.filter(d=>d.type==="strength");
     const cardioDefs = exDefs.filter(d=>d.type==="cardio");
 
