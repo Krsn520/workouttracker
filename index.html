@@ -212,6 +212,25 @@
   .check-list label:hover{border-color:var(--text-faint);}
   .check-list input{width:auto;accent-color:var(--accent);}
   .check-list .grp-lbl{width:100%;font-size:10.5px;color:var(--text-faint);font-weight:600;letter-spacing:0.3px;margin:4px 0 -2px;}
+  .check-list-group{display:flex;flex-wrap:wrap;gap:8px;width:100%;}
+  .check-list-group.hidden{display:none;}
+
+  .preset-preview-box{
+    border:1.5px dashed var(--border);border-radius:12px;padding:14px 16px;margin-top:16px;
+  }
+  .preset-preview-box .ppb-title{font-size:11px;font-weight:600;color:var(--text-faint);letter-spacing:0.3px;margin-bottom:10px;}
+  .preset-preview-box .ppb-empty{font-size:13px;color:var(--text-faint);text-align:center;padding:6px 0;}
+  .preset-preview-list{display:flex;flex-wrap:wrap;gap:8px;}
+  .preset-chip{
+    display:flex;align-items:center;gap:7px;background:var(--surface-2);border:1px solid var(--border-soft);
+    border-radius:20px;padding:6px 8px 6px 12px;font-size:12.5px;font-weight:600;
+  }
+  .preset-chip .row-tag{margin:0;}
+  .preset-chip .chip-x{
+    background:transparent;border:none;color:var(--text-faint);cursor:pointer;width:18px;height:18px;
+    border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s;
+  }
+  .preset-chip .chip-x:hover{color:var(--danger);background:var(--surface-3);}
 
   .preset-item{background:var(--bg-alt);border:1px solid var(--border);border-radius:11px;padding:12px 14px;margin-bottom:8px;
     display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
@@ -378,6 +397,61 @@
   <!-- PRESETS PANEL -->
   <section class="panel" id="panel-presets">
 
+    <div class="section-head" style="margin-bottom:14px;">
+      <h2 style="font-size:19px;">Exercise Library</h2>
+      <button type="button" class="link-btn blue" id="openAddExerciseBtn">
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>Add Exercise
+      </button>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <h3 style="font-size:17px;">Strength exercises</h3>
+        <table class="deftable" id="strengthTable">
+          <thead><tr><th>Name</th><th>Area</th><th>Weight</th><th>Scheme (A×B)</th><th></th></tr></thead>
+          <tbody id="strengthTableBody"></tbody>
+        </table>
+        <div id="strengthEmpty" class="empty" style="display:none;">
+          <div class="big">No strength exercises yet</div>Add one to start building your library.
+          <div><button type="button" class="btn btn-primary" id="strengthEmptyAddBtn" style="margin-top:14px;">+ Add Exercise</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:17px;">Cardio exercises</h3>
+        <table class="deftable" id="cardioTable">
+          <thead><tr><th>Name</th><th>Distance</th><th>Time</th><th></th></tr></thead>
+          <tbody id="cardioTableBody"></tbody>
+        </table>
+        <div id="cardioEmpty" class="empty" style="display:none;">
+          <div class="big">No cardio exercises yet</div>Add one to start building your library.
+          <div><button type="button" class="btn btn-primary" id="cardioEmptyAddBtn" style="margin-top:14px;">+ Add Exercise</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="font-size:17px;">Preset workouts</h3>
+      <p class="subtle">Group exercises from your library into a session you can generate with one tap from Summary.</p>
+      <form id="presetForm" novalidate>
+        <div class="field" style="margin-bottom:8px;">
+          <label for="presetName">Preset name</label>
+          <input type="text" id="presetName" placeholder="e.g. Push Day">
+        </div>
+        <label style="display:block;margin-bottom:8px;">Included exercises</label>
+        <div class="pill-toggle" id="presetTypeToggle" style="margin-bottom:12px;">
+          <button type="button" data-type="strength" class="active">Strength</button>
+          <button type="button" data-type="cardio">Cardio</button>
+        </div>
+        <div class="check-list" id="presetCheckList"></div>
+        <div class="btn-row">
+          <button type="button" class="btn btn-ghost" id="presetClearBtn">Clear</button>
+          <button type="submit" class="btn btn-primary" id="presetSubmitBtn">Save preset</button>
+        </div>
+      </form>
+      <div class="preset-preview-box" id="presetSelectedPreview"></div>
+      <div id="presetList" style="margin-top:18px;"></div>
+    </div>
+
     <div class="card" id="dataCard">
       <h3 style="font-size:17px;">Backup &amp; restore</h3>
       <p class="subtle">Export your exercise library, presets, and workout history as a JSON file — or restore from a previous backup.</p>
@@ -394,98 +468,6 @@
           Replace existing data instead of merging
         </label>
       </div>
-    </div>
-
-    <div class="two-col">
-      <div class="card">
-        <h3 style="font-size:17px;">Strength exercises</h3>
-        <p class="subtle">Define a name, muscle area, and default working weight and scheme.</p>
-        <form id="strengthDefForm" novalidate>
-          <div class="field" style="margin-bottom:10px;">
-            <label for="sdName">Name</label>
-            <input type="text" id="sdName" placeholder="e.g. Barbell Bench Press">
-          </div>
-          <div class="field" style="margin-bottom:10px;">
-            <label for="sdArea">Area</label>
-            <input type="text" id="sdArea" list="areaList" placeholder="e.g. Chest">
-            <datalist id="areaList">
-              <option value="Chest"><option value="Back"><option value="Legs">
-              <option value="Shoulders"><option value="Arms"><option value="Core">
-              <option value="Full Body"><option value="Glutes">
-            </datalist>
-          </div>
-          <div class="field" style="margin-bottom:10px;">
-            <label for="sdWeight">Default weight (lb)</label>
-            <input type="number" id="sdWeight" min="0" step="0.5" value="45">
-          </div>
-          <div class="form-grid" style="margin-bottom:4px;">
-            <div class="field span3">
-              <label for="sdReps">Reps (A)</label>
-              <input type="number" id="sdReps" min="1" step="1" value="8">
-            </div>
-            <div class="field span3">
-              <label for="sdSets">Sets (B)</label>
-              <input type="number" id="sdSets" min="1" step="1" value="3">
-            </div>
-          </div>
-          <p class="subtle">Scheme: <strong id="sdSchemePreview">(8×3)</strong></p>
-          <div class="btn-row">
-            <button type="button" class="btn btn-ghost" id="sdClearBtn">Clear</button>
-            <button type="submit" class="btn btn-primary" id="sdSubmitBtn">Add exercise</button>
-          </div>
-        </form>
-        <table class="deftable" id="strengthTable">
-          <thead><tr><th>Name</th><th>Area</th><th>Weight</th><th>Scheme (A×B)</th><th></th></tr></thead>
-          <tbody id="strengthTableBody"></tbody>
-        </table>
-        <div id="strengthEmpty" class="empty" style="display:none;"><div class="big">No strength exercises yet</div>Add one above to start building your library.</div>
-      </div>
-
-      <div class="card">
-        <h3 style="font-size:17px;">Cardio exercises</h3>
-        <p class="subtle">Define a name and a default distance / time.</p>
-        <form id="cardioDefForm" novalidate>
-          <div class="field" style="margin-bottom:10px;">
-            <label for="cdName">Name</label>
-            <input type="text" id="cdName" placeholder="e.g. Outdoor Run">
-          </div>
-          <div class="field" style="margin-bottom:10px;">
-            <label for="cdDistance">Default distance (km)</label>
-            <input type="number" id="cdDistance" min="0" step="0.01" value="3">
-          </div>
-          <div class="field" style="margin-bottom:10px;">
-            <label for="cdTime">Default time (min)</label>
-            <input type="number" id="cdTime" min="0" step="0.5" value="25">
-          </div>
-          <div class="btn-row">
-            <button type="button" class="btn btn-ghost" id="cdClearBtn">Clear</button>
-            <button type="submit" class="btn btn-primary" id="cdSubmitBtn">Add exercise</button>
-          </div>
-        </form>
-        <table class="deftable" id="cardioTable">
-          <thead><tr><th>Name</th><th>Distance</th><th>Time</th><th></th></tr></thead>
-          <tbody id="cardioTableBody"></tbody>
-        </table>
-        <div id="cardioEmpty" class="empty" style="display:none;"><div class="big">No cardio exercises yet</div>Add one above to start building your library.</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 style="font-size:17px;">Preset workouts</h3>
-      <p class="subtle">Group exercises from your library into a session you can generate with one tap from Summary.</p>
-      <form id="presetForm" novalidate>
-        <div class="field" style="margin-bottom:8px;">
-          <label for="presetName">Preset name</label>
-          <input type="text" id="presetName" placeholder="e.g. Push Day">
-        </div>
-        <label style="display:block;margin-bottom:2px;">Included exercises</label>
-        <div class="check-list" id="presetCheckList"></div>
-        <div class="btn-row">
-          <button type="button" class="btn btn-ghost" id="presetClearBtn">Clear</button>
-          <button type="submit" class="btn btn-primary" id="presetSubmitBtn">Save preset</button>
-        </div>
-      </form>
-      <div id="presetList" style="margin-top:18px;"></div>
     </div>
   </section>
 
@@ -576,6 +558,74 @@
     </form>
 
     <div class="logged-list-box" id="loggedListBox"></div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="exerciseModalOverlay">
+  <div class="modal-panel" style="max-width:540px;">
+    <div class="modal-header">
+      <h2 id="exerciseModalTitle">Add Exercise</h2>
+      <button class="modal-close" id="exerciseModalCloseBtn"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+    </div>
+
+    <div class="type-toggle-full" id="exerciseTypeToggle" style="margin-bottom:20px;">
+      <button type="button" data-etype="strength" class="active"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8v8M2 10v4M8 6v12M20 8v8M22 10v4M16 6v12M8 12h8"></path></svg>Weight Training</button>
+      <button type="button" data-etype="cardio"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>Cardio</button>
+    </div>
+
+    <form id="strengthDefForm" novalidate>
+      <div class="field" style="margin-bottom:10px;">
+        <label for="sdName">Name</label>
+        <input type="text" id="sdName" placeholder="e.g. Barbell Bench Press">
+      </div>
+      <div class="field" style="margin-bottom:10px;">
+        <label for="sdArea">Area</label>
+        <input type="text" id="sdArea" list="areaList" placeholder="e.g. Chest">
+        <datalist id="areaList">
+          <option value="Chest"><option value="Back"><option value="Legs">
+          <option value="Shoulders"><option value="Arms"><option value="Core">
+          <option value="Full Body"><option value="Glutes">
+        </datalist>
+      </div>
+      <div class="field" style="margin-bottom:10px;">
+        <label for="sdWeight">Default weight (lb)</label>
+        <input type="number" id="sdWeight" min="0" step="0.5" value="45">
+      </div>
+      <div class="form-grid" style="margin-bottom:4px;">
+        <div class="field span3">
+          <label for="sdReps">Reps (A)</label>
+          <input type="number" id="sdReps" min="1" step="1" value="8">
+        </div>
+        <div class="field span3">
+          <label for="sdSets">Sets (B)</label>
+          <input type="number" id="sdSets" min="1" step="1" value="3">
+        </div>
+      </div>
+      <p class="subtle">Scheme: <strong id="sdSchemePreview">(8×3)</strong></p>
+      <div class="btn-row">
+        <button type="button" class="btn btn-ghost" id="sdClearBtn">Clear</button>
+        <button type="submit" class="btn btn-primary" id="sdSubmitBtn">Add exercise</button>
+      </div>
+    </form>
+
+    <form id="cardioDefForm" novalidate class="hidden">
+      <div class="field" style="margin-bottom:10px;">
+        <label for="cdName">Name</label>
+        <input type="text" id="cdName" placeholder="e.g. Outdoor Run">
+      </div>
+      <div class="field" style="margin-bottom:10px;">
+        <label for="cdDistance">Default distance (km)</label>
+        <input type="number" id="cdDistance" min="0" step="0.01" value="3">
+      </div>
+      <div class="field" style="margin-bottom:10px;">
+        <label for="cdTime">Default time (min)</label>
+        <input type="number" id="cdTime" min="0" step="0.5" value="25">
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-ghost" id="cdClearBtn">Clear</button>
+        <button type="submit" class="btn btn-primary" id="cdSubmitBtn">Add exercise</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -1180,6 +1230,39 @@
     e.target.value = "";
   });
 
+  // ---------- Presets tab: exercise modal ----------
+  const exerciseOverlay = $("#exerciseModalOverlay");
+  let exerciseModalType = "strength";
+
+  function setExerciseModalType(type){
+    exerciseModalType = type;
+    $$("#exerciseTypeToggle button").forEach(b=> b.classList.toggle("active", b.dataset.etype===type));
+    $("#strengthDefForm").classList.toggle("hidden", type!=="strength");
+    $("#cardioDefForm").classList.toggle("hidden", type!=="cardio");
+  }
+  $("#exerciseTypeToggle").addEventListener("click", (e)=>{
+    const btn = e.target.closest("button[data-etype]");
+    if(!btn) return;
+    setExerciseModalType(btn.dataset.etype);
+  });
+
+  function openExerciseModal(type){
+    editingDefId = null; editingDefType = null;
+    resetSdForm();
+    resetCdForm();
+    setExerciseModalType(type || "strength");
+    $("#exerciseModalTitle").textContent = "Add Exercise";
+    exerciseOverlay.classList.remove("hidden");
+  }
+  function closeExerciseModal(){
+    exerciseOverlay.classList.add("hidden");
+  }
+  $("#openAddExerciseBtn").addEventListener("click", ()=> openExerciseModal("strength"));
+  $("#strengthEmptyAddBtn").addEventListener("click", ()=> openExerciseModal("strength"));
+  $("#cardioEmptyAddBtn").addEventListener("click", ()=> openExerciseModal("cardio"));
+  $("#exerciseModalCloseBtn").addEventListener("click", closeExerciseModal);
+  exerciseOverlay.addEventListener("click", (e)=>{ if(e.target === exerciseOverlay) closeExerciseModal(); });
+
   // ---------- Presets tab: strength defs ----------
   const sdForm = $("#strengthDefForm");
   function updateSdSchemePreview(){
@@ -1190,11 +1273,14 @@
   $("#sdSets").addEventListener("input", updateSdSchemePreview);
   function resetSdForm(){
     sdForm.reset(); $("#sdWeight").value = 45; $("#sdReps").value = 8; $("#sdSets").value = 3;
-    editingDefId=null; editingDefType=null;
     $("#sdSubmitBtn").textContent = "Add exercise";
     updateSdSchemePreview();
   }
-  $("#sdClearBtn").addEventListener("click", resetSdForm);
+  $("#sdClearBtn").addEventListener("click", ()=>{
+    editingDefId = null; editingDefType = null;
+    $("#exerciseModalTitle").textContent = "Add Exercise";
+    resetSdForm();
+  });
   sdForm.addEventListener("submit", async (e)=>{
     e.preventDefault();
     const name = $("#sdName").value.trim();
@@ -1204,7 +1290,8 @@
     const sets = parseInt($("#sdSets").value);
     if(!name || !area || isNaN(w) || w<0){ toast("Fill in all fields"); return; }
     if(!reps || reps<1 || !sets || sets<1){ toast("Reps and sets must be at least 1"); return; }
-    if(editingDefId && editingDefType==="strength"){
+    const wasEditing = editingDefId && editingDefType==="strength";
+    if(wasEditing){
       const idx = exDefs.findIndex(x=>x.id===editingDefId);
       if(idx>-1) exDefs[idx] = {...exDefs[idx], name, area, weight:wDispToLb(w), reps, sets};
       toast("Exercise updated");
@@ -1213,25 +1300,30 @@
       toast("Exercise added");
     }
     await saveDefs();
-    resetSdForm();
+    editingDefId = null; editingDefType = null;
     renderPresetsTab();
     refreshLibraryUI();
+    if(wasEditing){ closeExerciseModal(); } else { resetSdForm(); $("#sdName").focus(); }
   });
 
   const cdForm = $("#cardioDefForm");
   function resetCdForm(){
     cdForm.reset(); $("#cdDistance").value=3; $("#cdTime").value=25;
-    editingDefId=null; editingDefType=null;
     $("#cdSubmitBtn").textContent = "Add exercise";
   }
-  $("#cdClearBtn").addEventListener("click", resetCdForm);
+  $("#cdClearBtn").addEventListener("click", ()=>{
+    editingDefId = null; editingDefType = null;
+    $("#exerciseModalTitle").textContent = "Add Exercise";
+    resetCdForm();
+  });
   cdForm.addEventListener("submit", async (e)=>{
     e.preventDefault();
     const name = $("#cdName").value.trim();
     const dist = parseFloat($("#cdDistance").value);
     const time = parseFloat($("#cdTime").value);
     if(!name || isNaN(dist) || dist<0 || isNaN(time) || time<0){ toast("Fill in all fields"); return; }
-    if(editingDefId && editingDefType==="cardio"){
+    const wasEditing = editingDefId && editingDefType==="cardio";
+    if(wasEditing){
       const idx = exDefs.findIndex(x=>x.id===editingDefId);
       if(idx>-1) exDefs[idx] = {...exDefs[idx], name, distance:dDispToMi(dist), time};
       toast("Exercise updated");
@@ -1240,26 +1332,28 @@
       toast("Exercise added");
     }
     await saveDefs();
-    resetCdForm();
+    editingDefId = null; editingDefType = null;
     renderPresetsTab();
     refreshLibraryUI();
+    if(wasEditing){ closeExerciseModal(); } else { resetCdForm(); $("#cdName").focus(); }
   });
 
   function editDef(id, type){
     const d = exDefs.find(x=>x.id===id);
     if(!d) return;
     editingDefId = id; editingDefType = type;
+    setExerciseModalType(type);
+    $("#exerciseModalTitle").textContent = "Edit Exercise";
     if(type==="strength"){
       $("#sdName").value=d.name; $("#sdArea").value=d.area; $("#sdWeight").value=fmtNum(wLbToDisp(d.weight));
       $("#sdReps").value = d.reps || 8; $("#sdSets").value = d.sets || 3;
       updateSdSchemePreview();
       $("#sdSubmitBtn").textContent = "Save changes";
-      $("#sdName").scrollIntoView({behavior:"smooth", block:"center"});
     }else{
       $("#cdName").value=d.name; $("#cdDistance").value=fmtNum(dMiToDisp(d.distance)); $("#cdTime").value=fmtNum(d.time);
       $("#cdSubmitBtn").textContent = "Save changes";
-      $("#cdName").scrollIntoView({behavior:"smooth", block:"center"});
     }
+    exerciseOverlay.classList.remove("hidden");
   }
 
   async function deleteDef(id){
@@ -1319,24 +1413,63 @@
   }
 
   // ---------- presets ----------
+  let presetFormType = "strength";
+
   function renderPresetCheckList(){
     const box = $("#presetCheckList");
     const strengthDefs = exDefs.filter(d=>d.type==="strength");
     const cardioDefs = exDefs.filter(d=>d.type==="cardio");
     if(exDefs.length===0){
       box.innerHTML = `<div class="subtle" style="margin:0;">Add exercises above first.</div>`;
+      $("#presetSelectedPreview").innerHTML = `<div class="ppb-title">Exercises in this preset</div><div class="ppb-empty">No exercises selected yet — check some above to add them here.</div>`;
       return;
     }
-    let html = "";
-    if(strengthDefs.length){
-      html += `<div class="grp-lbl">Strength</div>`;
-      html += strengthDefs.map(d=>`<label><input type="checkbox" value="${d.id}"> ${escapeHtml(d.name)}</label>`).join("");
+    function group(defs, type){
+      if(!defs.length) return `<div class="check-list-group ${presetFormType===type?"":"hidden"}" data-group="${type}"><div class="subtle" style="margin:0;">No ${type} exercises in your library yet.</div></div>`;
+      return `<div class="check-list-group ${presetFormType===type?"":"hidden"}" data-group="${type}">
+        ${defs.map(d=>`<label><input type="checkbox" value="${d.id}"> ${escapeHtml(d.name)}</label>`).join("")}
+      </div>`;
     }
-    if(cardioDefs.length){
-      html += `<div class="grp-lbl">Cardio</div>`;
-      html += cardioDefs.map(d=>`<label><input type="checkbox" value="${d.id}"> ${escapeHtml(d.name)}</label>`).join("");
+    box.innerHTML = group(strengthDefs,"strength") + group(cardioDefs,"cardio");
+    box.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+      cb.addEventListener("change", renderPresetPreview);
+    });
+    renderPresetPreview();
+  }
+
+  $("#presetTypeToggle").addEventListener("click", (e)=>{
+    const btn = e.target.closest("button[data-type]");
+    if(!btn) return;
+    presetFormType = btn.dataset.type;
+    $$("#presetTypeToggle button").forEach(b=> b.classList.toggle("active", b===btn));
+    $$("#presetCheckList .check-list-group").forEach(g=> g.classList.toggle("hidden", g.dataset.group!==presetFormType));
+  });
+
+  function renderPresetPreview(){
+    const box = $("#presetSelectedPreview");
+    const checked = [...$$("#presetCheckList input[type=checkbox]:checked")];
+    if(checked.length===0){
+      box.innerHTML = `<div class="ppb-title">Exercises in this preset</div><div class="ppb-empty">No exercises selected yet — check some above to add them here.</div>`;
+      return;
     }
-    box.innerHTML = html;
+    const items = checked.map(cb=>{
+      const d = exDefs.find(x=>x.id===cb.value);
+      return d ? {id:d.id, name:d.name, type:d.type} : null;
+    }).filter(Boolean);
+    box.innerHTML = `<div class="ppb-title">Exercises in this preset (${items.length})</div>
+      <div class="preset-preview-list">
+        ${items.map(it=>`<div class="preset-chip" data-id="${it.id}">
+          ${escapeHtml(it.name)}<span class="row-tag">${it.type==="cardio"?"Cardio":"Strength"}</span>
+          <button type="button" class="chip-x" title="Remove">${icon("x","i-sm")}</button>
+        </div>`).join("")}
+      </div>`;
+    box.querySelectorAll(".preset-chip .chip-x").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const id = btn.closest(".preset-chip").dataset.id;
+        const cb = $(`#presetCheckList input[type=checkbox][value="${id}"]`);
+        if(cb){ cb.checked = false; renderPresetPreview(); }
+      });
+    });
   }
 
   const presetForm = $("#presetForm");
@@ -1345,6 +1478,7 @@
     $$("#presetCheckList input[type=checkbox]").forEach(cb=>cb.checked=false);
     editingPresetId = null;
     $("#presetSubmitBtn").textContent = "Save preset";
+    renderPresetPreview();
   }
   $("#presetClearBtn").addEventListener("click", resetPresetForm);
   presetForm.addEventListener("submit", async (e)=>{
@@ -1373,6 +1507,7 @@
     $("#presetName").value = p.name;
     $$("#presetCheckList input[type=checkbox]").forEach(cb=> cb.checked = p.exerciseIds.includes(cb.value));
     $("#presetSubmitBtn").textContent = "Save changes";
+    renderPresetPreview();
     $("#presetName").scrollIntoView({behavior:"smooth", block:"center"});
   }
 
