@@ -180,6 +180,8 @@
   .row-stats{font-size:14px;color:var(--text-dim);white-space:nowrap;font-weight:500;}
   .row-stats .num{color:var(--text);font-weight:700;}
   .row-stats .scheme{color:var(--accent-bright);font-weight:700;}
+  .row-stats.stat-stack{display:inline-flex;align-items:baseline;gap:6px;}
+  .row-stats.stat-stack .stats-sep{color:var(--text-faint);font-weight:400;}
   .row-note{width:100%;font-size:11.5px;color:var(--text-faint);font-style:italic;margin-top:6px;padding-left:40px;}
   .row-actions{display:flex;gap:5px;flex-shrink:0;}
   .row-actions .icon-btn{width:38px;height:38px;border-radius:9px;}
@@ -332,6 +334,8 @@
     .form-grid{grid-template-columns:repeat(2,1fr);}
     .field.span2, .field.span3, .field.span6{grid-column:span 2;}
     .row-stats{white-space:normal;}
+    .row-stats.stat-stack{display:flex;flex-direction:column;align-items:flex-start;gap:0;}
+    .row-stats.stat-stack .stats-sep{display:none;}
     .session-row{flex-wrap:wrap;}
     .modal-panel{padding:20px;}
     .modal-session-row{flex-direction:column;align-items:stretch;gap:12px;}
@@ -1083,7 +1087,7 @@
     const tag = e.type==="strength" ? escapeHtml(e.area_display || "") : "Cardio";
     let statsHtml;
     if(e.type==="strength"){
-      statsHtml = `<span class="num">${fmtNum(wLbToDisp(e.weight))} lbs</span> – <span class="scheme">${e.reps}×${e.sets}</span>`;
+      statsHtml = `<span class="num">${fmtNum(wLbToDisp(e.weight))} lbs</span><span class="stats-sep">–</span><span class="scheme">${e.reps}×${e.sets}</span>`;
     }else{
       const dist = dMiToDisp(e.distance);
       const p = paceOf(e);
@@ -1093,7 +1097,7 @@
       <button class="check-circle ${e.done?"done":""}" title="Mark done">${icon("check")}</button>
       <div class="row-icon ${e.type==="cardio"?"cardio":""}">${icon(e.type==="cardio"?"clock":"dumbbell", "i-sm")}</div>
       <div class="row-name"><span class="n">${escapeHtml(e.name)}</span>${tag?`<span class="row-tag">${tag}</span>`:""}</div>
-      <div class="row-stats">${statsHtml}</div>
+      <div class="row-stats${e.type==="strength"?" stat-stack":""}">${statsHtml}</div>
       <div class="row-actions">
         <button class="icon-btn edit" title="Edit">${icon("pencil","i-sm")}</button>
         <button class="icon-btn del" title="Delete">${icon("x","i-sm")}</button>
