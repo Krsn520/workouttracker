@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Track — Coach's Clipboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -142,7 +142,7 @@
   .btn-row{display:flex;gap:10px;margin-top:16px;justify-content:flex-end;}
 
   .icon-btn{background:transparent;border:1px solid var(--border);color:var(--text-faint);
-    width:30px;height:30px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;}
+    width:40px;height:40px;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;}
   .icon-btn:hover{color:var(--text);border-color:var(--text-dim);}
   .icon-btn.del:hover{color:var(--danger);border-color:var(--danger);}
   .icon-btn svg{stroke:currentColor;}
@@ -165,9 +165,9 @@
 
   .session-row{display:flex;align-items:center;gap:12px;background:var(--surface-2);border:1px solid var(--border-soft);
     border-radius:11px;padding:12px 14px;margin-bottom:9px;}
-  .check-circle{width:22px;height:22px;border-radius:50%;border:2px solid var(--text-faint);background:transparent;
+  .check-circle{width:32px;height:32px;border-radius:50%;border:2px solid var(--text-faint);background:transparent;
     cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0;transition:.15s;}
-  .check-circle svg{width:12px;height:12px;stroke:#fff;opacity:0;transition:.15s;}
+  .check-circle svg{width:14px;height:14px;stroke:#fff;opacity:0;transition:.15s;}
   .check-circle.done{background:var(--accent);border-color:var(--accent);}
   .check-circle.done svg{opacity:1;}
   .row-icon{width:28px;height:28px;border-radius:8px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -175,14 +175,14 @@
   .row-icon.cardio{background:rgba(139,92,246,0.15);}
   .row-icon.cardio svg{stroke:var(--purple-bright);}
   .row-name{flex:1;min-width:0;display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
-  .row-name .n{font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;}
+  .row-name .n{font-weight:700;font-size:14.5px;white-space:normal;overflow-wrap:break-word;word-break:break-word;flex:1 1 160px;min-width:0;}
   .row-tag{font-size:10.5px;font-weight:600;color:var(--text-dim);background:var(--surface-3);padding:3px 8px;border-radius:6px;letter-spacing:0.2px;}
   .row-stats{font-size:14px;color:var(--text-dim);white-space:nowrap;font-weight:500;}
   .row-stats .num{color:var(--text);font-weight:700;}
   .row-stats .scheme{color:var(--accent-bright);font-weight:700;}
   .row-note{width:100%;font-size:11.5px;color:var(--text-faint);font-style:italic;margin-top:6px;padding-left:40px;}
   .row-actions{display:flex;gap:5px;flex-shrink:0;}
-  .row-actions .icon-btn{width:26px;height:26px;border-radius:6px;}
+  .row-actions .icon-btn{width:38px;height:38px;border-radius:9px;}
 
   .edit-session-btn{
     width:100%;background:transparent;border:1.5px dashed var(--border);color:var(--text-faint);
@@ -222,7 +222,7 @@
   table.deftable tr:last-child td{border-bottom:none;}
   table.deftable td.name-cell{font-weight:700;}
   table.deftable td.actions-cell{text-align:right;white-space:nowrap;}
-  table.deftable td.actions-cell .icon-btn{display:inline-flex;margin-left:6px;width:26px;height:26px;}
+  table.deftable td.actions-cell .icon-btn{display:inline-flex;margin-left:6px;width:36px;height:36px;}
 
   .check-list{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 16px;}
   .check-list label{display:flex;align-items:center;gap:7px;background:var(--bg-alt);border:1px solid var(--border);
@@ -245,7 +245,7 @@
   }
   .preset-chip .row-tag{margin:0;}
   .preset-chip .chip-x{
-    background:transparent;border:none;color:var(--text-faint);cursor:pointer;width:18px;height:18px;
+    background:transparent;border:none;color:var(--text-faint);cursor:pointer;width:28px;height:28px;
     border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s;
   }
   .preset-chip .chip-x:hover{color:var(--danger);background:var(--surface-3);}
@@ -275,7 +275,7 @@
   .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
   .modal-header h2{font-size:19px;font-weight:800;margin:0;}
   .modal-close{background:transparent;border:none;color:var(--text-dim);cursor:pointer;
-    width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:8px;}
+    width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:9px;}
   .modal-close:hover{color:var(--text);background:var(--surface-2);}
 
   .modal-session-row{display:flex;gap:24px;align-items:flex-end;margin-bottom:20px;flex-wrap:wrap;}
@@ -336,6 +336,11 @@
     .modal-panel{padding:20px;}
     .modal-session-row{flex-direction:column;align-items:stretch;gap:12px;}
     #modalDateInput{width:100%;}
+    .log-form-actions{
+      position:sticky;bottom:0;margin:16px -20px -20px;padding:12px 20px calc(12px + env(safe-area-inset-bottom));
+      background:var(--bg-alt);border-top:1px solid var(--border);z-index:5;
+    }
+    input[type=text], input[type=number], input[type=date], select, textarea{font-size:16px;}
   }
   @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;}}
 
@@ -506,6 +511,29 @@
   <footer class="note">Data is saved to your account and only visible to you.</footer>
 </div>
 
+<!-- GENERATE TYPE CHOOSER -->
+<div class="modal-overlay hidden" id="generateTypeOverlay">
+  <div class="modal-panel" style="max-width:380px;">
+    <div class="modal-header">
+      <h2>Generate a workout</h2>
+      <button class="modal-close" id="generateTypeCloseBtn"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+    </div>
+    <div class="field" style="margin-bottom:18px;">
+      <label for="generateCountInput">Number of exercises</label>
+      <input type="number" id="generateCountInput" min="1" max="12" step="1" value="5">
+    </div>
+    <div class="field" style="margin-bottom:22px;">
+      <label>Focus area</label>
+      <div class="type-toggle-full" id="generateAreaToggle">
+        <button type="button" data-area="mixed" class="active">Mixed</button>
+        <button type="button" data-area="upper">Upper</button>
+        <button type="button" data-area="lower">Lower</button>
+      </div>
+    </div>
+    <button type="button" class="btn btn-primary" id="generateConfirmBtn" style="width:100%;padding:13px;">Generate</button>
+  </div>
+</div>
+
 <!-- EDIT SESSION MODAL -->
 <div class="modal-overlay hidden" id="editSessionOverlay">
   <div class="modal-panel">
@@ -586,7 +614,10 @@
         </div>
       </div>
 
-      <button type="submit" class="add-set-btn"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>Add Set</button>
+      <div class="btn-row log-form-actions">
+        <button type="button" class="btn btn-ghost hidden" id="cancelEditBtn">Cancel</button>
+        <button type="submit" class="add-set-btn" style="flex:1;"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>Add Set</button>
+      </div>
     </form>
 
     <div class="logged-list-box" id="loggedListBox"></div>
@@ -677,7 +708,11 @@
   let editingDefId = null, editingDefType = null;
   let editingPresetId = null;
   let progressChart = null, volumeChart = null, cardioChart = null;
-  const collapsedDates = new Set();
+  const collapsedStateOverrides = {}; // dateKey -> explicit true/false; unset = use default
+  function isSessionCollapsed(date){
+    if(Object.prototype.hasOwnProperty.call(collapsedStateOverrides, date)) return collapsedStateOverrides[date];
+    return date !== todayISO(); // collapse every day except today by default
+  }
 
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => document.querySelectorAll(sel);
@@ -717,33 +752,48 @@
   }
 
   function volumeOf(e){ return e.type==="strength" ? e.sets*e.reps*e.weight : 0; }
+  function doneEntries(){ return entries.filter(e=>e.done); }
   function est1RM(weight, reps){ return reps<=1 ? weight : weight*(1+reps/30); }
   function paceOf(e){ return (e.type==="cardio" && e.distance>0) ? e.time/e.distance : null; }
 
   // ---------- storage ----------
-  async function loadAll(){
-    try{ const r = await window.storage.get("entries", false); entries = r&&r.value ? JSON.parse(r.value) : []; }catch(e){ entries = []; }
-    try{ const r = await window.storage.get("exercise_defs", false); exDefs = r&&r.value ? JSON.parse(r.value) : []; }catch(e){ exDefs = []; }
-    try{ const r = await window.storage.get("presets", false); presets = r&&r.value ? JSON.parse(r.value) : []; }catch(e){ presets = []; }
-    try{ const r = await window.storage.get("session_names", false); sessionNames = r&&r.value ? JSON.parse(r.value) : {}; }catch(e){ sessionNames = {}; }
+  // Uses the browser's own localStorage so data persists on this device across reloads,
+  // without depending on any Claude.ai-specific storage API (which isn't available when
+  // this file is opened directly, e.g. on a phone).
+  const STORAGE_PREFIX = "trackApp:";
+
+  function storageKey(key){ return STORAGE_PREFIX + key; }
+
+  function readStorageKey(key, fallback){
+    try{
+      const raw = localStorage.getItem(storageKey(key));
+      return raw !== null ? JSON.parse(raw) : fallback;
+    }catch(e){
+      console.error("Couldn't read '"+key+"' from storage", e);
+      return fallback;
+    }
   }
 
-  const sleep = (ms) => new Promise(r=>setTimeout(r, ms));
-  async function saveToStorage(key, value, attempts=3){
-    for(let i=0;i<attempts;i++){
-      try{
-        await window.storage.set(key, value, false);
-        const check = await window.storage.get(key, false);
-        if(check && check.value === value) return true;
-      }catch(e){ /* fall through to retry */ }
-      if(i < attempts-1) await sleep(250*(i+1));
-    }
-    return false;
+  async function loadAll(){
+    entries = readStorageKey("entries", []);
+    exDefs = readStorageKey("exercise_defs", []);
+    presets = readStorageKey("presets", []);
+    sessionNames = readStorageKey("session_names", {});
   }
-  async function saveEntries(){ const ok = await saveToStorage("entries", JSON.stringify(entries)); if(!ok) toast("Couldn't save — try again"); }
-  async function saveDefs(){ const ok = await saveToStorage("exercise_defs", JSON.stringify(exDefs)); if(!ok) toast("Couldn't save — try again"); }
-  async function savePresets(){ const ok = await saveToStorage("presets", JSON.stringify(presets)); if(!ok) toast("Couldn't save — try again"); }
-  async function saveSessionNames(){ const ok = await saveToStorage("session_names", JSON.stringify(sessionNames)); if(!ok) toast("Couldn't save — try again"); }
+
+  async function saveToStorage(key, value){
+    try{
+      localStorage.setItem(storageKey(key), value);
+      return true;
+    }catch(e){
+      console.error("Couldn't save '"+key+"' to storage", e);
+      return false;
+    }
+  }
+  async function saveEntries(){ const ok = await saveToStorage("entries", JSON.stringify(entries)); if(!ok) toast("Couldn't save — your browser's storage may be full or disabled"); }
+  async function saveDefs(){ const ok = await saveToStorage("exercise_defs", JSON.stringify(exDefs)); if(!ok) toast("Couldn't save — your browser's storage may be full or disabled"); }
+  async function savePresets(){ const ok = await saveToStorage("presets", JSON.stringify(presets)); if(!ok) toast("Couldn't save — your browser's storage may be full or disabled"); }
+  async function saveSessionNames(){ const ok = await saveToStorage("session_names", JSON.stringify(sessionNames)); if(!ok) toast("Couldn't save — your browser's storage may be full or disabled"); }
 
   // ---------- tabs ----------
   $$("nav.pillnav button").forEach(btn=>{
@@ -800,7 +850,32 @@
   overlay.addEventListener("click", (e)=>{ if(e.target === overlay) closeModal(); });
 
   $("#newToggleBtn").addEventListener("click", ()=> openModal(todayISO(), {expandPreset:false}));
-  $("#generateToggleBtn").addEventListener("click", ()=> generateSessionFromPresets());
+
+  const UPPER_AREAS = ["Chest","Arms","Shoulders","Core"];
+  const LOWER_AREAS = ["Back","Legs","Glutes"];
+  const generateTypeOverlay = $("#generateTypeOverlay");
+  let generateAreaChoice = "mixed"; // "mixed" | "upper" | "lower"
+
+  $("#generateToggleBtn").addEventListener("click", ()=>{
+    generateTypeOverlay.classList.remove("hidden");
+  });
+  $("#generateTypeCloseBtn").addEventListener("click", ()=> generateTypeOverlay.classList.add("hidden"));
+  generateTypeOverlay.addEventListener("click", (e)=>{ if(e.target === generateTypeOverlay) generateTypeOverlay.classList.add("hidden"); });
+
+  $$("#generateAreaToggle button").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      generateAreaChoice = btn.dataset.area;
+      $$("#generateAreaToggle button").forEach(b=> b.classList.toggle("active", b===btn));
+    });
+  });
+
+  $("#generateConfirmBtn").addEventListener("click", ()=>{
+    let count = parseInt($("#generateCountInput").value, 10);
+    if(!Number.isFinite(count) || count < 1) count = 5;
+    count = Math.min(count, 12);
+    generateTypeOverlay.classList.add("hidden");
+    generateSessionFromPresets(generateAreaChoice, count);
+  });
 
   function shuffle(arr){
     const a = arr.slice();
@@ -811,14 +886,39 @@
     return a;
   }
 
-  async function generateSessionFromPresets(){
-    const pool = exDefs.slice();
+  async function generateOneMoreExercise(date){
+    const usedNames = new Set(entries.filter(e=>e.date===date).map(e=>e.name.toLowerCase()));
+    let pool = exDefs.filter(d=> !usedNames.has(d.name.toLowerCase()));
+    if(pool.length===0) pool = exDefs.slice(); // everything already logged today — allow repeats
     if(pool.length===0){
       toast("Add some exercises to your library first");
+      return;
+    }
+    const d = shuffle(pool)[0];
+    if(d.type==="strength"){
+      addEntryDirect({type:"strength", name:d.name, date, sets:d.sets||3, reps:d.reps||8, weight:d.weight||0, distance:0, time:0, area_display:d.area});
+    }else{
+      addEntryDirect({type:"cardio", name:d.name, date, sets:0, reps:0, weight:0, distance:d.distance||0, time:d.time||0});
+    }
+    await saveEntries();
+    renderSessions();
+    toast(`Added ${d.name} to the session`);
+  }
+
+  async function generateSessionFromPresets(areaFilter, count){
+    count = count || 5;
+    let pool = exDefs.slice();
+    if(areaFilter==="upper"){
+      pool = pool.filter(d=> d.type==="strength" && UPPER_AREAS.includes(d.area));
+    }else if(areaFilter==="lower"){
+      pool = pool.filter(d=> d.type==="strength" && LOWER_AREAS.includes(d.area));
+    }
+    if(pool.length===0){
+      toast(areaFilter==="mixed" ? "Add some exercises to your library first" : `No ${areaFilter}-body exercises in your library yet`);
       openModal(todayISO(), {expandPreset:true});
       return;
     }
-    const picks = shuffle(pool).slice(0, Math.min(5, pool.length));
+    const picks = shuffle(pool).slice(0, Math.min(count, pool.length));
     const date = todayISO();
     picks.forEach(d=>{
       if(d.type==="strength"){
@@ -926,7 +1026,13 @@
     editingEntryId = null;
     const btn = form.querySelector("button[type=submit]");
     btn.innerHTML = btn.innerHTML.replace("Save Set", "Add Set");
+    $("#cancelEditBtn").classList.add("hidden");
   }
+
+  $("#cancelEditBtn").addEventListener("click", ()=>{
+    resetForm();
+    renderLoggedList();
+  });
 
   form.addEventListener("submit", async (e)=>{
     e.preventDefault();
@@ -948,18 +1054,24 @@
       payload.sets = 0; payload.reps = 0; payload.weight = 0;
     }
 
+    let savedEntry = null;
     if(editingEntryId){
       const idx = entries.findIndex(x=>x.id===editingEntryId);
-      if(idx>-1) entries[idx] = {...entries[idx], ...payload};
+      if(idx>-1){ entries[idx] = {...entries[idx], ...payload}; savedEntry = entries[idx]; }
       toast("Set updated");
     }else{
-      entries.push({id:uid(), ...payload, note:"", done:false, created:Date.now()});
+      const newEntry = {id:uid(), ...payload, note:"", done:false, created:Date.now()};
+      entries.push(newEntry);
+      savedEntry = newEntry;
       toast("Set added");
     }
     await saveEntries();
     resetForm();
     renderLoggedList();
     renderSessions();
+    if(savedEntry && savedEntry.type==="strength"){
+      await maybeOfferPresetUpdate(savedEntry, {requireImprovement:false});
+    }
   });
 
   function addEntryDirect(payload){
@@ -1002,10 +1114,48 @@
   async function toggleDone(id, onChange){
     const e = entries.find(x=>x.id===id);
     if(!e) return;
+    const wasDone = e.done;
     e.done = !e.done;
     await saveEntries();
     renderSessions();
     if(onChange) onChange();
+    if(!wasDone && e.done && e.type==="strength"){
+      await maybeOfferPresetUpdate(e);
+    }
+  }
+
+  async function maybeOfferPresetUpdate(e, {requireImprovement=true}={}){
+    const def = exDefs.find(d=> d.type==="strength" && d.name.toLowerCase()===e.name.toLowerCase());
+    if(!def) return;
+    const weightChanged = e.weight !== def.weight;
+    const repsChanged = e.reps !== def.reps;
+    const setsChanged = e.sets !== def.sets;
+    if(!weightChanged && !repsChanged && !setsChanged) return;
+
+    if(requireImprovement){
+      const improvedWeight = e.weight > def.weight;
+      const improvedReps = e.reps > def.reps;
+      const improvedSets = e.sets > def.sets;
+      if(!improvedWeight && !improvedReps && !improvedSets) return;
+    }
+
+    const parts = [];
+    if(weightChanged) parts.push(`weight ${fmtNum(wLbToDisp(def.weight))} → ${fmtNum(wLbToDisp(e.weight))} lb`);
+    if(repsChanged) parts.push(`reps ${def.reps} → ${e.reps}`);
+    if(setsChanged) parts.push(`sets ${def.sets} → ${e.sets}`);
+    const message = requireImprovement
+      ? `New high for ${e.name} (${parts.join(", ")}). Update this exercise's default in your library to match?`
+      : `${e.name} is now logged as (${parts.join(", ")}), different from your saved preset. Update this exercise's default in your library to match?`;
+    const wantsUpdate = confirm(message);
+    if(!wantsUpdate) return;
+
+    if(weightChanged) def.weight = e.weight;
+    if(repsChanged) def.reps = e.reps;
+    if(setsChanged) def.sets = e.sets;
+    await saveDefs();
+    refreshLibraryUI();
+    renderPresetsTab();
+    toast(`Updated ${e.name}'s default`);
   }
 
   function loadEntryIntoForm(id){
@@ -1030,6 +1180,8 @@
     editingEntryId = id;
     const btn = form.querySelector("button[type=submit]");
     btn.innerHTML = btn.innerHTML.replace("Add Set", "Save Set");
+    $("#cancelEditBtn").classList.remove("hidden");
+    renderLoggedList();
   }
 
   // startEdit: opens the modal (from a session card pencil icon) pre-loaded for that entry
@@ -1059,6 +1211,12 @@
   // ---------- logged list inside modal ----------
   function renderLoggedList(){
     const box = $("#loggedListBox");
+    if(editingEntryId){
+      const e = entries.find(x=>x.id===editingEntryId);
+      box.innerHTML = e ? sessionRow(e) : `<div class="empty-msg">Set no longer exists</div>`;
+      attachRowHandlers(box, renderLoggedList);
+      return;
+    }
     const rows = entries.filter(e=> e.date===modalDate && e.type===logType);
     if(rows.length===0){
       box.innerHTML = `<div class="empty-msg">No ${logType==="strength"?"weight":"cardio"} sets logged yet</div>`;
@@ -1089,7 +1247,7 @@
       const rows = groups[date];
       const strengthCount = rows.filter(r=>r.type==="strength").length;
       const cardioCount = rows.filter(r=>r.type==="cardio").length;
-      const collapsed = collapsedDates.has(date);
+      const collapsed = isSessionCollapsed(date);
       const customName = sessionNames[date];
       return `<div class="session-card" data-date="${date}">
         <div class="session-head" data-toggle="${date}">
@@ -1108,7 +1266,10 @@
         </div>
         <div class="session-body ${collapsed?"collapsed":""}">
           ${rows.map(sessionRow).join("")}
-          <button class="edit-session-btn" data-date="${date}">Edit Session Details</button>
+          <div style="display:flex;gap:8px;">
+            <button class="edit-session-btn" data-date="${date}" style="flex:1;">Edit Session Details</button>
+            <button class="edit-session-btn generate-more-btn" data-date="${date}" style="flex:1;">Generate another exercise</button>
+          </div>
         </div>
       </div>`;
     }).join("");
@@ -1117,11 +1278,12 @@
       const date = card.dataset.date;
       card.querySelector("[data-toggle]").addEventListener("click", (e)=>{
         if(e.target.closest(".del-day")) return;
-        collapsedDates.has(date) ? collapsedDates.delete(date) : collapsedDates.add(date);
+        collapsedStateOverrides[date] = !isSessionCollapsed(date);
         renderSessions();
       });
       card.querySelector(".del-day").addEventListener("click", (e)=>{ e.stopPropagation(); deleteDay(date); });
-      card.querySelector(".edit-session-btn").addEventListener("click", ()=> openModal(date, {expandPreset:false}));
+      card.querySelector(".edit-session-btn:not(.generate-more-btn)").addEventListener("click", ()=> openModal(date, {expandPreset:false}));
+      card.querySelector(".generate-more-btn").addEventListener("click", (e)=>{ e.stopPropagation(); generateOneMoreExercise(date); });
       card.querySelectorAll(".session-row .edit").forEach(btn=>{
         btn.addEventListener("click", (ev)=>{
           const id = ev.target.closest(".session-row").dataset.id;
@@ -1675,7 +1837,7 @@
     return dt;
   }
   function computeStreak(){
-    const daySet = new Set(entries.map(e=>e.date));
+    const daySet = new Set(doneEntries().map(e=>e.date));
     if(daySet.size===0) return 0;
     let streak = 0;
     let cur = new Date(todayISO()+"T00:00:00");
@@ -1687,11 +1849,12 @@
   function renderStats(){
     refreshLibraryUI();
     const grid = $("#statGrid");
-    const totalSessions = new Set(entries.map(e=>e.date)).size;
-    const totalSets = entries.reduce((s,e)=>s+(e.type==="strength"?e.sets:0),0);
-    const totalVolumeLb = entries.reduce((s,e)=>s+volumeOf(e),0);
-    const totalDistMi = entries.reduce((s,e)=>s+(e.type==="cardio"?e.distance:0),0);
-    const totalCardioTime = entries.reduce((s,e)=>s+(e.type==="cardio"?e.time:0),0);
+    const stEntries = doneEntries();
+    const totalSessions = new Set(stEntries.map(e=>e.date)).size;
+    const totalSets = stEntries.reduce((s,e)=>s+(e.type==="strength"?e.sets:0),0);
+    const totalVolumeLb = stEntries.reduce((s,e)=>s+volumeOf(e),0);
+    const totalDistMi = stEntries.reduce((s,e)=>s+(e.type==="cardio"?e.distance:0),0);
+    const totalCardioTime = stEntries.reduce((s,e)=>s+(e.type==="cardio"?e.time:0),0);
     const streak = computeStreak();
 
     grid.innerHTML = `
@@ -1734,7 +1897,7 @@
     const weeksToShow = 18;
 
     const dailyVol = {};
-    entries.forEach(e=>{
+    doneEntries().forEach(e=>{
       if(e.type==="strength") dailyVol[e.date] = (dailyVol[e.date]||0) + volumeOf(e);
     });
     const maxVol = Math.max(0, ...Object.values(dailyVol));
@@ -1789,7 +1952,7 @@
     const caption = $("#progressSchemeCaption");
     if(!val){ if(progressChart){progressChart.destroy();progressChart=null;} caption.textContent=""; return; }
     const [type, name] = val.split("::");
-    const rows = entries.filter(e=>e.type===type && e.name===name).sort((a,b)=>a.date.localeCompare(b.date));
+    const rows = doneEntries().filter(e=>e.type===type && e.name===name).sort((a,b)=>a.date.localeCompare(b.date));
     const def = exDefs.find(d=>d.type===type && d.name===name);
 
     let labels, data, label, schemes = [];
@@ -1836,7 +1999,7 @@
   function renderVolumeChart(){
     const ctx = $("#volumeChart").getContext("2d");
     const byWeek = {};
-    entries.filter(e=>e.type==="strength").forEach(e=>{
+    entries.filter(e=>e.type==="strength" && e.done).forEach(e=>{
       const wk = isoWeekStart(new Date(e.date+"T00:00:00")).toISOString().slice(0,10);
       byWeek[wk] = (byWeek[wk]||0) + volumeOf(e);
     });
@@ -1853,7 +2016,7 @@
   function renderCardioChart(){
     const ctx = $("#cardioChart").getContext("2d");
     const byWeek = {};
-    entries.filter(e=>e.type==="cardio").forEach(e=>{
+    entries.filter(e=>e.type==="cardio" && e.done).forEach(e=>{
       const wk = isoWeekStart(new Date(e.date+"T00:00:00")).toISOString().slice(0,10);
       byWeek[wk] = (byWeek[wk]||0) + e.distance;
     });
