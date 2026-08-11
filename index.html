@@ -182,6 +182,7 @@
   .row-stats .scheme{color:var(--accent-bright);font-weight:700;}
   .row-stats.stat-stack{display:inline-flex;align-items:baseline;gap:6px;}
   .row-stats.stat-stack .stats-sep{color:var(--text-faint);font-weight:400;}
+  .row-stats.stat-stack .pace{color:var(--text-faint);font-weight:400;}
   .row-note{width:100%;font-size:11.5px;color:var(--text-faint);font-style:italic;margin-top:6px;padding-left:40px;}
   .row-actions{display:flex;gap:5px;flex-shrink:0;}
   .row-actions .icon-btn{width:38px;height:38px;border-radius:9px;}
@@ -1091,13 +1092,13 @@
     }else{
       const dist = dMiToDisp(e.distance);
       const p = paceOf(e);
-      statsHtml = `<span class="num">${fmtNum(dist)} km</span> – <span class="scheme">${fmtTime(e.time)}</span>` + (p? ` <span style="color:var(--text-faint);font-weight:400;">(${fmtTime(p)}/km)</span>` : "");
+      statsHtml = `<span class="num">${fmtNum(dist)} km</span><span class="stats-sep">–</span><span class="scheme">${fmtTime(e.time)}</span>` + (p? `<span class="pace">(${fmtTime(p)}/km)</span>` : "");
     }
     return `<div class="session-row" data-id="${e.id}">
       <button class="check-circle ${e.done?"done":""}" title="Mark done">${icon("check")}</button>
       <div class="row-icon ${e.type==="cardio"?"cardio":""}">${icon(e.type==="cardio"?"clock":"dumbbell", "i-sm")}</div>
       <div class="row-name"><span class="n">${escapeHtml(e.name)}</span>${tag?`<span class="row-tag">${tag}</span>`:""}</div>
-      <div class="row-stats${e.type==="strength"?" stat-stack":""}">${statsHtml}</div>
+      <div class="row-stats stat-stack">${statsHtml}</div>
       <div class="row-actions">
         <button class="icon-btn edit" title="Edit">${icon("pencil","i-sm")}</button>
         <button class="icon-btn del" title="Delete">${icon("x","i-sm")}</button>
