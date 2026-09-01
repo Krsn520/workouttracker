@@ -88,6 +88,31 @@
   nav.pillnav button:hover{color:var(--text);}
   nav.pillnav button.active{background:var(--accent);color:#fff;box-shadow:0 3px 10px rgba(67,97,238,0.35);}
 
+  /* bottom nav (mobile) */
+  nav.bottomnav{
+    display:none;position:fixed;left:0;right:0;bottom:0;z-index:90;
+    background:var(--bg-alt);border-top:1px solid var(--border);
+    padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+    align-items:flex-end;justify-content:space-around;gap:6px;
+    box-shadow:0 -6px 20px rgba(0,0,0,0.35);
+  }
+  nav.bottomnav button{
+    display:flex;flex-direction:column;align-items:center;gap:4px;background:transparent;border:none;
+    color:var(--text-faint);font-family:'Inter',sans-serif;font-weight:700;font-size:10.5px;
+    padding:7px 14px;border-radius:12px;cursor:pointer;transition:.15s;flex:1;max-width:110px;
+  }
+  nav.bottomnav button svg{stroke:currentColor;width:19px;height:19px;transition:.15s;}
+  nav.bottomnav button.active{color:var(--accent-bright);}
+  nav.bottomnav button.primary{
+    color:var(--text-dim);margin-top:-14px;
+  }
+  nav.bottomnav button.primary svg{
+    width:23px;height:23px;padding:9px;border-radius:50%;background:var(--surface-3);
+    box-shadow:0 3px 10px rgba(0,0,0,0.3);
+  }
+  nav.bottomnav button.primary.active{color:var(--accent-bright);}
+  nav.bottomnav button.primary.active svg{background:var(--accent);stroke:#fff;box-shadow:0 4px 14px rgba(67,97,238,0.5);}
+
   .panel{display:none;animation:fade .25s ease;}
   .panel.active{display:block;}
   @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
@@ -108,6 +133,32 @@
   .card + .card{margin-top:16px;}
   .card h3{font-size:14px;font-weight:700;margin:0 0 14px 0;color:var(--text);}
   .subtle{font-size:12px;color:var(--text-faint);margin:-6px 0 14px;}
+
+  /* today's workout header */
+  .today-card{
+    display:flex;align-items:center;gap:18px;background:var(--surface);border:1px solid var(--border);
+    border-radius:16px;padding:18px 20px;margin-bottom:22px;flex-wrap:wrap;
+  }
+  .today-ring{position:relative;width:64px;height:64px;flex-shrink:0;}
+  .today-ring svg{width:64px;height:64px;transform:rotate(-90deg);}
+  .today-ring circle{fill:none;stroke-width:6;}
+  .today-ring .ring-bg{stroke:var(--surface-3);}
+  .today-ring .ring-fg{stroke:var(--accent-bright);stroke-linecap:round;stroke-dasharray:169.6;stroke-dashoffset:169.6;transition:stroke-dashoffset .3s ease;}
+  .today-ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--text);}
+  .today-info{flex:1;min-width:150px;}
+  .today-label{font-size:12px;font-weight:700;color:var(--text-faint);text-transform:uppercase;letter-spacing:.4px;}
+  .today-complete{font-size:19px;font-weight:800;margin-top:2px;}
+  .today-streak{display:flex;align-items:center;gap:5px;margin-top:6px;font-size:12.5px;font-weight:700;color:#ffb454;}
+  .today-streak svg{width:14px;height:14px;stroke:#ffb454;fill:none;}
+  .today-cta{
+    background:var(--accent);color:#fff;border:none;border-radius:10px;padding:12px 20px;
+    font-weight:700;font-size:14px;cursor:pointer;transition:.15s;white-space:nowrap;
+  }
+  .today-cta:hover{background:var(--accent-bright);}
+  @media (max-width:520px){
+    .today-card{padding:16px;}
+    .today-cta{width:100%;}
+  }
 
   /* form fields */
   .form-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
@@ -170,22 +221,74 @@
   .check-circle svg{width:14px;height:14px;stroke:#fff;opacity:0;transition:.15s;}
   .check-circle.done{background:var(--accent);border-color:var(--accent);}
   .check-circle.done svg{opacity:1;}
+  .check-circle.celebrate{animation:checkBounce .42s cubic-bezier(.34,1.56,.64,1), checkFlash .55s ease-out;}
+  @keyframes checkBounce{
+    0%{transform:scale(1);}
+    40%{transform:scale(1.32);}
+    65%{transform:scale(0.92);}
+    100%{transform:scale(1);}
+  }
+  @keyframes checkFlash{
+    0%{background:#22c55e;border-color:#22c55e;box-shadow:0 0 0 7px rgba(34,197,94,0.32);}
+    100%{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 0 rgba(34,197,94,0);}
+  }
   .row-icon{width:28px;height:28px;border-radius:8px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .row-icon svg{stroke:var(--accent-bright);}
   .row-icon.cardio{background:rgba(139,92,246,0.15);}
   .row-icon.cardio svg{stroke:var(--purple-bright);}
   .row-name{flex:1;min-width:0;display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
-  .row-name .n{font-weight:700;font-size:14.5px;white-space:normal;overflow-wrap:break-word;word-break:break-word;flex:1 1 160px;min-width:0;}
+  .row-name .n{font-weight:700;font-size:14.5px;white-space:normal;overflow-wrap:break-word;word-break:break-word;flex:1 1 160px;min-width:0;
+    transition:color .3s ease, opacity .3s ease;}
+  .row-name .n.struck{text-decoration:line-through;text-decoration-color:var(--text-faint);text-decoration-thickness:2px;color:var(--text-faint);}
   .row-tag{font-size:10.5px;font-weight:600;color:var(--text-dim);background:var(--surface-3);padding:3px 8px;border-radius:6px;letter-spacing:0.2px;}
   .row-stats{font-size:14px;color:var(--text-dim);white-space:nowrap;font-weight:500;}
   .row-stats .num{color:var(--text);font-weight:700;}
   .row-stats .scheme{color:var(--accent-bright);font-weight:700;}
   .row-stats.stat-stack{display:inline-flex;align-items:baseline;gap:6px;}
   .row-stats.stat-stack .stats-sep{color:var(--text-faint);font-weight:400;}
+
+  .confetti-layer{position:fixed;inset:0;pointer-events:none;z-index:300;}
+  .confetti-piece{position:fixed;width:6px;height:6px;border-radius:2px;transform:translate(-50%,-50%);animation:confettiPop .55s ease-out forwards;}
+  @keyframes confettiPop{
+    0%{transform:translate(-50%,-50%) scale(0.7) rotate(0deg);opacity:1;}
+    100%{transform:translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.25) rotate(200deg);opacity:0;}
+  }
   .row-stats.stat-stack .pace{color:var(--text-faint);font-weight:400;}
   .row-note{width:100%;font-size:11.5px;color:var(--text-faint);font-style:italic;margin-top:6px;padding-left:40px;}
   .row-actions{display:flex;gap:5px;flex-shrink:0;}
   .row-actions .icon-btn{width:38px;height:38px;border-radius:9px;}
+
+  /* expandable row details (mobile) */
+  .row-details{width:100%;}
+  .row-meta-time{display:none;font-size:11px;color:var(--text-faint);margin-top:6px;padding-left:40px;}
+  .session-row.expanded .row-meta-time{display:block;}
+
+  /* swipe-to-reveal (mobile session rows) */
+  .row-swipe-wrap{position:relative;border-radius:11px;margin-bottom:9px;overflow:hidden;}
+  .row-swipe-wrap .session-row{margin-bottom:0;position:relative;z-index:2;touch-action:pan-y;}
+  .row-swipe-bg{
+    position:absolute;inset:0;display:flex;align-items:center;gap:8px;padding-left:18px;
+    background:#22c55e;color:#fff;font-weight:700;font-size:13px;border-radius:11px;opacity:0;z-index:1;
+  }
+  .row-swipe-bg svg{stroke:#fff;}
+  .row-swipe-actions{position:absolute;top:0;right:0;bottom:0;display:flex;z-index:1;width:132px;}
+  .swipe-act{
+    width:66px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:4px;border:none;font-size:10.5px;font-weight:700;color:#fff;cursor:pointer;
+  }
+  .swipe-act svg{stroke:#fff;}
+  .swipe-act.edit{background:var(--accent);}
+  .swipe-act.del{background:var(--danger);}
+
+  @media (min-width:701px){
+    .row-swipe-bg, .row-swipe-actions{display:none;}
+  }
+  @media (max-width:700px){
+    .row-swipe-wrap .row-actions{display:none;}
+    .row-meta-time{padding-left:0;margin-top:2px;}
+    .session-row.expanded .row-meta-time{display:block;}
+    .session-row:not(.expanded) .row-note{display:none;}
+  }
 
   .edit-session-btn{
     width:100%;background:transparent;border:1.5px dashed var(--border);color:var(--text-faint);
@@ -346,6 +449,15 @@
       background:var(--bg-alt);border-top:1px solid var(--border);z-index:5;
     }
     input[type=text], input[type=number], input[type=date], select, textarea{font-size:16px;}
+
+    header.top nav.pillnav{display:none;}
+    nav.bottomnav{display:flex;}
+    .wrap{padding-bottom:calc(84px + env(safe-area-inset-bottom));}
+    .toast{bottom:calc(78px + env(safe-area-inset-bottom));}
+  }
+  @media (max-width:360px){
+    nav.bottomnav button span{display:none;}
+    nav.bottomnav button{gap:0;padding:8px 10px;}
   }
   @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;}}
 
@@ -376,6 +488,22 @@
 
   <!-- SUMMARY PANEL -->
   <section class="panel active" id="panel-summary">
+    <div class="today-card" id="todayCard">
+      <div class="today-ring">
+        <svg viewBox="0 0 64 64">
+          <circle class="ring-bg" cx="32" cy="32" r="27"></circle>
+          <circle class="ring-fg" id="todayRingFg" cx="32" cy="32" r="27"></circle>
+        </svg>
+        <div class="today-ring-pct" id="todayRingPct">0%</div>
+      </div>
+      <div class="today-info">
+        <div class="today-label">Today's Workout</div>
+        <div class="today-complete" id="todayComplete">0 of 0 complete</div>
+        <div class="today-streak" id="todayStreak"></div>
+      </div>
+      <button type="button" class="today-cta" id="todayCtaBtn">Start workout</button>
+    </div>
+
     <div class="section-head">
       <h2>Recent Sessions</h2>
       <div class="section-actions">
@@ -697,6 +825,12 @@
   </div>
 </div>
 
+<nav class="bottomnav">
+  <button data-tab="stats"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg><span>Stats</span></button>
+  <button data-tab="summary" class="active primary"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5l11 11M4 8l4-4 3 3-4 4-3-3zm13 13l4-4-3-3-4 4 3 3zM9.5 5.5l1.8-1.8m3.2 15.6l1.8-1.8"></path></svg><span>Summary</span></button>
+  <button data-tab="presets"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg><span>Presets</span></button>
+</nav>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -755,6 +889,11 @@
     const s = Math.round((min-m)*60);
     return m + ":" + String(s).padStart(2,"0");
   }
+  function fmtClock(ts){
+    if(!ts) return "";
+    try{ return new Date(ts).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}); }
+    catch(err){ return ""; }
+  }
 
   function volumeOf(e){ return e.type==="strength" ? e.sets*e.reps*e.weight : 0; }
   function doneEntries(){ return entries.filter(e=>e.done); }
@@ -801,15 +940,16 @@
   async function saveSessionNames(){ const ok = await saveToStorage("session_names", JSON.stringify(sessionNames)); if(!ok) toast("Couldn't save — your browser's storage may be full or disabled"); }
 
   // ---------- tabs ----------
-  $$("nav.pillnav button").forEach(btn=>{
+  const allNavBtns = $$("nav.pillnav button, nav.bottomnav button");
+  allNavBtns.forEach(btn=>{
     btn.addEventListener("click", ()=>{
-      $$("nav.pillnav button").forEach(b=>b.classList.remove("active"));
-      btn.classList.add("active");
+      const tab = btn.dataset.tab;
+      allNavBtns.forEach(b=> b.classList.toggle("active", b.dataset.tab===tab));
       $$(".panel").forEach(p=>p.classList.remove("active"));
-      $("#panel-"+btn.dataset.tab).classList.add("active");
-      if(btn.dataset.tab === "stats") renderStats();
-      if(btn.dataset.tab === "presets") renderPresetsTab();
-      if(btn.dataset.tab === "summary") renderSessions();
+      $("#panel-"+tab).classList.add("active");
+      if(tab === "stats") renderStats();
+      if(tab === "presets") renderPresetsTab();
+      if(tab === "summary") renderSessions();
     });
   });
 
@@ -822,6 +962,7 @@
     check: `<polyline points="20 6 9 17 4 12"></polyline>`,
     pencil: `<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>`,
     x: `<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>`,
+    flame: `<path d="M12 2c1 3-3 4.5-3 8a3 3 0 0 0 6 0c0-1-.5-2-1-2.5 1.5 0 3 1.5 3 4a5 5 0 0 1-10 0c0-3.5 2-5 3.5-7.5C10.9 3.2 11.5 2.6 12 2z"></path>`,
   };
   function icon(name, cls){ return `<svg class="${cls||'i'}" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg>`; }
   $("#presetChevron").innerHTML = icon("chevron","i-sm");
@@ -855,6 +996,10 @@
   overlay.addEventListener("click", (e)=>{ if(e.target === overlay) closeModal(); });
 
   $("#newToggleBtn").addEventListener("click", ()=> openModal(todayISO(), {expandPreset:false}));
+  $("#todayCtaBtn").addEventListener("click", ()=>{
+    const hasToday = entries.some(e=>e.date===todayISO());
+    openModal(todayISO(), {expandPreset: !hasToday});
+  });
 
   const UPPER_AREAS = ["Chest","Arms","Shoulders","Core"];
   const LOWER_AREAS = ["Back","Legs","Glutes"];
@@ -1084,7 +1229,9 @@
   }
 
   // ---------- session rows ----------
-  function sessionRow(e){
+  function sessionRow(e, opts){
+    opts = opts || {};
+    const swipeable = !!opts.swipeable;
     const tag = e.type==="strength" ? escapeHtml(e.area_display || "") : "Cardio";
     let statsHtml;
     if(e.type==="strength"){
@@ -1094,16 +1241,35 @@
       const p = paceOf(e);
       statsHtml = `<span class="num">${fmtNum(dist)} km</span><span class="stats-sep">–</span><span class="scheme">${fmtTime(e.time)}</span>` + (p? `<span class="pace">(${fmtTime(p)}/km)</span>` : "");
     }
-    return `<div class="session-row" data-id="${e.id}">
+
+    const detailsHtml = swipeable
+      ? `<div class="row-details">
+          ${e.note ? `<div class="row-note">"${escapeHtml(e.note)}"</div>` : ""}
+          <div class="row-meta-time">Logged ${fmtClock(e.created)}</div>
+        </div>`
+      : (e.note ? `<div class="row-note">"${escapeHtml(e.note)}"</div>` : "");
+
+    const rowMarkup = `<div class="session-row" data-id="${e.id}">
       <button class="check-circle ${e.done?"done":""}" title="Mark done">${icon("check")}</button>
       <div class="row-icon ${e.type==="cardio"?"cardio":""}">${icon(e.type==="cardio"?"clock":"dumbbell", "i-sm")}</div>
-      <div class="row-name"><span class="n">${escapeHtml(e.name)}</span>${tag?`<span class="row-tag">${tag}</span>`:""}</div>
+      <div class="row-name"><span class="n${e.done?" struck":""}">${escapeHtml(e.name)}</span>${tag?`<span class="row-tag">${tag}</span>`:""}</div>
       <div class="row-stats stat-stack">${statsHtml}</div>
       <div class="row-actions">
         <button class="icon-btn edit" title="Edit">${icon("pencil","i-sm")}</button>
         <button class="icon-btn del" title="Delete">${icon("x","i-sm")}</button>
       </div>
-      ${e.note ? `<div class="row-note">"${escapeHtml(e.note)}"</div>` : ""}
+      ${detailsHtml}
+    </div>`;
+
+    if(!swipeable) return rowMarkup;
+
+    return `<div class="row-swipe-wrap" data-id="${e.id}">
+      <div class="row-swipe-bg"><span>${icon("check","i-sm")}Complete</span></div>
+      <div class="row-swipe-actions">
+        <button class="swipe-act edit" title="Edit">${icon("pencil","i-sm")}<span>Edit</span></button>
+        <button class="swipe-act del" title="Delete">${icon("x","i-sm")}<span>Delete</span></button>
+      </div>
+      ${rowMarkup}
     </div>`;
   }
 
@@ -1116,16 +1282,143 @@
     });
   }
 
+  // ---------- swipe gestures (mobile session rows) ----------
+  const SWIPE_ACTIONS_WIDTH = 132;
+  const SWIPE_OPEN_THRESHOLD = 56;
+  const SWIPE_COMPLETE_THRESHOLD = 76;
+  const SWIPE_TAP_SLOP = 10;
+
+  function closeOtherSwipeRows(exceptWrap){
+    document.querySelectorAll(".row-swipe-wrap.swiped-open").forEach(wrap=>{
+      if(wrap===exceptWrap) return;
+      wrap.classList.remove("swiped-open");
+      const row = wrap.querySelector(".session-row");
+      if(row) row.style.transform = "";
+    });
+  }
+  function closeAllSwipeRows(){ closeOtherSwipeRows(null); }
+  document.addEventListener("touchstart", (ev)=>{
+    if(!ev.target.closest(".row-swipe-wrap")) closeAllSwipeRows();
+  }, {passive:true});
+
+  function attachSwipeGestures(container){
+    container.querySelectorAll(".row-swipe-wrap").forEach(wrap=>{
+      const row = wrap.querySelector(".session-row");
+      const bg = wrap.querySelector(".row-swipe-bg");
+      const id = wrap.dataset.id;
+      let startX=0, startY=0, dx=0, dragging=false, horizontal=null, wasOpen=false;
+
+      row.addEventListener("touchstart", (ev)=>{
+        if(!window.matchMedia("(max-width:700px)").matches) return;
+        if(ev.target.closest(".check-circle") || ev.target.closest(".row-actions")) return;
+        closeOtherSwipeRows(wrap);
+        const t = ev.touches[0];
+        startX = t.clientX; startY = t.clientY; dx = 0; dragging = true; horizontal = null;
+        wasOpen = wrap.classList.contains("swiped-open");
+        row.style.transition = "none";
+      }, {passive:true});
+
+      row.addEventListener("touchmove", (ev)=>{
+        if(!dragging) return;
+        const t = ev.touches[0];
+        const curDx = t.clientX - startX;
+        const curDy = t.clientY - startY;
+        if(horizontal===null && (Math.abs(curDx)>6 || Math.abs(curDy)>6)){
+          horizontal = Math.abs(curDx) > Math.abs(curDy);
+        }
+        if(!horizontal) return;
+        ev.preventDefault();
+        const base = wasOpen ? -SWIPE_ACTIONS_WIDTH : 0;
+        dx = Math.max(-SWIPE_ACTIONS_WIDTH, Math.min(base + curDx, 90));
+        row.style.transform = `translateX(${dx}px)`;
+        if(bg) bg.style.opacity = String(Math.min(1, Math.max(0, dx) / SWIPE_COMPLETE_THRESHOLD));
+      }, {passive:false});
+
+      row.addEventListener("touchend", ()=>{
+        if(!dragging) return;
+        dragging = false;
+        row.style.transition = "";
+        if(horizontal){
+          if(dx >= SWIPE_COMPLETE_THRESHOLD){
+            row.style.transform = "";
+            wrap.classList.remove("swiped-open");
+            if(bg) bg.style.opacity = "0";
+            toggleDone(id);
+          }else if(dx <= -SWIPE_OPEN_THRESHOLD){
+            row.style.transform = `translateX(-${SWIPE_ACTIONS_WIDTH}px)`;
+            wrap.classList.add("swiped-open");
+            if(bg) bg.style.opacity = "0";
+          }else{
+            row.style.transform = wasOpen ? `translateX(-${SWIPE_ACTIONS_WIDTH}px)` : "";
+            wrap.classList.toggle("swiped-open", wasOpen);
+            if(bg) bg.style.opacity = "0";
+          }
+        }else if(Math.abs(dx)<SWIPE_TAP_SLOP){
+          if(wrap.classList.contains("swiped-open")){
+            closeAllSwipeRows();
+          }else{
+            row.classList.toggle("expanded");
+          }
+        }
+        horizontal = null;
+      });
+    });
+  }
+
+  function spawnConfetti(anchorEl){
+    const rect = anchorEl.getBoundingClientRect();
+    const originX = rect.left + rect.width/2;
+    const originY = rect.top + rect.height/2;
+    const colors = ["#22c55e","#5b7cfa","#a78bfa","#ffb454","#eef1f8"];
+    const layer = document.createElement("div");
+    layer.className = "confetti-layer";
+    document.body.appendChild(layer);
+    const N = 8;
+    for(let i=0;i<N;i++){
+      const piece = document.createElement("span");
+      piece.className = "confetti-piece";
+      const angle = (Math.PI*2*i)/N + (Math.random()*0.5 - 0.25);
+      const dist = 24 + Math.random()*20;
+      piece.style.left = originX+"px";
+      piece.style.top = originY+"px";
+      piece.style.setProperty("--dx", (Math.cos(angle)*dist)+"px");
+      piece.style.setProperty("--dy", (Math.sin(angle)*dist - 8)+"px");
+      piece.style.background = colors[i % colors.length];
+      layer.appendChild(piece);
+    }
+    setTimeout(()=> layer.remove(), 600);
+  }
+
+  function celebrateCompletion(id){
+    document.querySelectorAll(`.session-row[data-id="${id}"]`).forEach(row=>{
+      const circle = row.querySelector(".check-circle");
+      const name = row.querySelector(".row-name .n");
+      if(circle){
+        circle.classList.add("done","celebrate");
+        spawnConfetti(circle);
+      }
+      if(name) name.classList.add("struck");
+    });
+  }
+
   async function toggleDone(id, onChange){
     const e = entries.find(x=>x.id===id);
     if(!e) return;
     const wasDone = e.done;
     e.done = !e.done;
     await saveEntries();
-    renderSessions();
-    if(onChange) onChange();
-    if(!wasDone && e.done && e.type==="strength"){
-      await maybeOfferPresetUpdate(e);
+    renderTodayCard();
+
+    if(!wasDone && e.done){
+      celebrateCompletion(id);
+      setTimeout(async ()=>{
+        renderSessions();
+        if(onChange) onChange();
+        if(e.type==="strength") await maybeOfferPresetUpdate(e);
+      }, 560);
+    }else{
+      renderSessions();
+      if(onChange) onChange();
     }
   }
 
@@ -1237,8 +1530,29 @@
     return d.toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric",year:"numeric"});
   }
 
+  function renderTodayCard(){
+    const today = todayISO();
+    const todays = entries.filter(e=>e.date===today);
+    const total = todays.length;
+    const done = todays.filter(e=>e.done).length;
+    const pct = total ? done/total : 0;
+    const circumference = 169.6;
+
+    $("#todayRingFg").style.strokeDashoffset = String(circumference * (1 - pct));
+    $("#todayRingPct").textContent = `${Math.round(pct*100)}%`;
+    $("#todayComplete").textContent = `${done} of ${total} complete`;
+
+    const streak = computeStreak();
+    $("#todayStreak").innerHTML = streak>0
+      ? `${icon("flame","i-sm")}<span>${streak}-day streak</span>`
+      : `<span style="color:var(--text-faint);font-weight:600;">No streak yet</span>`;
+
+    $("#todayCtaBtn").textContent = total>0 ? "Continue workout" : "Start workout";
+  }
+
   function renderSessions(){
     refreshLibraryUI();
+    renderTodayCard();
     const container = $("#sessionsList");
     if(entries.length===0){
       container.innerHTML = `<div class="empty"><div class="big">No sessions logged yet</div>Use New or Generate above to log your first workout.</div>`;
@@ -1270,7 +1584,7 @@
           </div>
         </div>
         <div class="session-body ${collapsed?"collapsed":""}">
-          ${rows.map(sessionRow).join("")}
+          ${rows.map(r=>sessionRow(r,{swipeable:true})).join("")}
           <div style="display:flex;gap:8px;">
             <button class="edit-session-btn" data-date="${date}" style="flex:1;">Edit Session Details</button>
             <button class="edit-session-btn generate-more-btn" data-date="${date}" style="flex:1;">Generate another exercise</button>
@@ -1307,7 +1621,22 @@
           toggleDone(id);
         });
       });
+      card.querySelectorAll(".row-swipe-actions .edit").forEach(btn=>{
+        btn.addEventListener("click", (ev)=>{
+          const id = ev.target.closest(".row-swipe-wrap").dataset.id;
+          closeAllSwipeRows();
+          startEdit(id);
+        });
+      });
+      card.querySelectorAll(".row-swipe-actions .del").forEach(btn=>{
+        btn.addEventListener("click", (ev)=>{
+          const id = ev.target.closest(".row-swipe-wrap").dataset.id;
+          closeAllSwipeRows();
+          deleteEntry(id);
+        });
+      });
     });
+    attachSwipeGestures(container);
   }
 
   // ---------- library-wide UI refresh ----------
