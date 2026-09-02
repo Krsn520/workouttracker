@@ -214,7 +214,7 @@
   .session-body{padding:0 20px 20px;}
   .session-body.collapsed{display:none;}
 
-  .session-row{display:flex;align-items:center;gap:12px;background:var(--surface-2);border:1px solid var(--border-soft);
+  .session-row{display:flex;align-items:center;flex-wrap:wrap;gap:12px;background:var(--surface-2);border:1px solid var(--border-soft);
     border-radius:11px;padding:12px 14px;margin-bottom:9px;}
   .check-circle{width:32px;height:32px;border-radius:50%;border:2px solid var(--text-faint);background:transparent;
     cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0;transition:.15s;}
@@ -237,7 +237,7 @@
   .row-icon.cardio{background:rgba(139,92,246,0.15);}
   .row-icon.cardio svg{stroke:var(--purple-bright);}
   .row-name{flex:1;min-width:0;display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
-  .row-name .n{font-weight:700;font-size:14.5px;white-space:normal;overflow-wrap:break-word;word-break:break-word;flex:1 1 160px;min-width:0;
+  .row-name .n{font-weight:700;font-size:14.5px;white-space:normal;overflow-wrap:break-word;word-break:break-word;flex:1 1 160px;min-width:110px;
     transition:color .3s ease, opacity .3s ease;}
   .row-name .n.struck{text-decoration:line-through;text-decoration-color:var(--text-faint);text-decoration-thickness:2px;color:var(--text-faint);}
   .row-tag{font-size:10.5px;font-weight:600;color:var(--text-dim);background:var(--surface-3);padding:3px 8px;border-radius:6px;letter-spacing:0.2px;}
@@ -280,6 +280,25 @@
   .swipe-act.edit{background:var(--accent);}
   .swipe-act.del{background:var(--danger);}
 
+  .row-swipe-wrap.swipe-hint .session-row{animation:swipeHintPeek 1.6s ease-in-out;}
+  .row-swipe-wrap.swipe-hint .row-swipe-bg{animation:swipeHintBgPeek 1.6s ease-in-out;}
+  @keyframes swipeHintPeek{
+    0%{transform:translateX(0);}
+    20%{transform:translateX(-46px);}
+    45%{transform:translateX(-46px);}
+    62%{transform:translateX(0);}
+    74%{transform:translateX(18px);}
+    88%{transform:translateX(0);}
+    100%{transform:translateX(0);}
+  }
+  @keyframes swipeHintBgPeek{
+    0%{opacity:0;}
+    60%{opacity:0;}
+    74%{opacity:1;}
+    88%{opacity:0;}
+    100%{opacity:0;}
+  }
+
   @media (min-width:701px){
     .row-swipe-bg, .row-swipe-actions{display:none;}
   }
@@ -296,6 +315,22 @@
     transition:.15s;margin-top:4px;
   }
   .edit-session-btn:hover{color:var(--text-dim);border-color:var(--text-faint);}
+
+  .start-choice-btn{
+    display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--surface-2);
+    border:1px solid var(--border-soft);border-radius:13px;padding:14px;cursor:pointer;transition:.15s;
+  }
+  .start-choice-btn:hover{border-color:var(--text-faint);background:var(--surface-3);}
+  .start-choice-icon{
+    width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .start-choice-icon svg{width:20px;height:20px;}
+  .start-choice-icon.purple{background:rgba(139,92,246,0.15);}
+  .start-choice-icon.purple svg{stroke:var(--purple-bright);}
+  .start-choice-icon.blue{background:var(--accent-soft);}
+  .start-choice-icon.blue svg{stroke:var(--accent-bright);}
+  .start-choice-title{font-weight:700;font-size:14.5px;color:var(--text);}
+  .start-choice-sub{font-size:12px;color:var(--text-faint);margin-top:2px;}
 
   .empty{text-align:center;padding:44px 20px;color:var(--text-faint);}
   .empty .big{font-size:15px;font-weight:700;color:var(--text-dim);margin-bottom:6px;}
@@ -440,7 +475,6 @@
     .row-stats{white-space:normal;}
     .row-stats.stat-stack{display:flex;flex-direction:column;align-items:flex-start;gap:0;}
     .row-stats.stat-stack .stats-sep{display:none;}
-    .session-row{flex-wrap:wrap;}
     .modal-panel{padding:20px;}
     .modal-session-row{flex-direction:column;align-items:stretch;gap:12px;}
     #modalDateInput{width:100%;}
@@ -506,10 +540,6 @@
 
     <div class="section-head">
       <h2>Recent Sessions</h2>
-      <div class="section-actions">
-        <button class="link-btn purple" id="generateToggleBtn"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>Generate</button>
-        <button class="link-btn blue" id="newToggleBtn"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>New</button>
-      </div>
     </div>
 
     <div id="sessionsList"></div>
@@ -645,6 +675,31 @@
 </div>
 
 <!-- GENERATE TYPE CHOOSER -->
+<div class="modal-overlay hidden" id="startChoiceOverlay">
+  <div class="modal-panel" style="max-width:380px;">
+    <div class="modal-header">
+      <h2>Start a Workout</h2>
+      <button class="modal-close" id="startChoiceCloseBtn"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <button type="button" class="start-choice-btn" id="chooseGenerateBtn">
+        <div class="start-choice-icon purple"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg></div>
+        <div class="start-choice-text">
+          <div class="start-choice-title">Generate a workout</div>
+          <div class="start-choice-sub">Pick a focus area and let it build one for you</div>
+        </div>
+      </button>
+      <button type="button" class="start-choice-btn" id="chooseManualBtn">
+        <div class="start-choice-icon blue"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+        <div class="start-choice-text">
+          <div class="start-choice-title">Fill in manually</div>
+          <div class="start-choice-sub">Log an exercise yourself</div>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay hidden" id="generateTypeOverlay">
   <div class="modal-panel" style="max-width:380px;">
     <div class="modal-header">
@@ -995,10 +1050,14 @@
   $("#modalCloseBtn").addEventListener("click", closeModal);
   overlay.addEventListener("click", (e)=>{ if(e.target === overlay) closeModal(); });
 
-  $("#newToggleBtn").addEventListener("click", ()=> openModal(todayISO(), {expandPreset:false}));
-  $("#todayCtaBtn").addEventListener("click", ()=>{
-    const hasToday = entries.some(e=>e.date===todayISO());
-    openModal(todayISO(), {expandPreset: !hasToday});
+  const startChoiceOverlay = $("#startChoiceOverlay");
+  $("#todayCtaBtn").addEventListener("click", ()=> startChoiceOverlay.classList.remove("hidden"));
+  $("#startChoiceCloseBtn").addEventListener("click", ()=> startChoiceOverlay.classList.add("hidden"));
+  startChoiceOverlay.addEventListener("click", (e)=>{ if(e.target === startChoiceOverlay) startChoiceOverlay.classList.add("hidden"); });
+
+  $("#chooseManualBtn").addEventListener("click", ()=>{
+    startChoiceOverlay.classList.add("hidden");
+    openModal(todayISO(), {expandPreset:false});
   });
 
   const UPPER_AREAS = ["Chest","Arms","Shoulders","Core"];
@@ -1006,7 +1065,8 @@
   const generateTypeOverlay = $("#generateTypeOverlay");
   let generateAreaChoice = "mixed"; // "mixed" | "upper" | "lower"
 
-  $("#generateToggleBtn").addEventListener("click", ()=>{
+  $("#chooseGenerateBtn").addEventListener("click", ()=>{
+    startChoiceOverlay.classList.add("hidden");
     generateTypeOverlay.classList.remove("hidden");
   });
   $("#generateTypeCloseBtn").addEventListener("click", ()=> generateTypeOverlay.classList.add("hidden"));
@@ -2367,12 +2427,28 @@
   $("#exerciseSelect").addEventListener("change", renderProgressChart);
 
   // ---------- init ----------
+  // ---------- swipe gesture discovery hint (mobile, first visit only) ----------
+  function maybeShowSwipeHint(){
+    if(readStorageKey("swipe_hint_seen", false)) return;
+    if(!window.matchMedia("(max-width:700px)").matches) return;
+    const wrap = document.querySelector("#sessionsList .row-swipe-wrap");
+    if(!wrap) return; // nothing logged yet to demo on — try again next time there's a row
+
+    saveToStorage("swipe_hint_seen", "true");
+    setTimeout(()=>{
+      wrap.classList.add("swipe-hint");
+      toast("Tip: swipe a workout left to edit/delete, or right to mark it complete");
+      wrap.addEventListener("animationend", ()=> wrap.classList.remove("swipe-hint"), {once:true});
+    }, 700);
+  }
+
   async function init(){
     await loadAll();
     modalDate = todayISO();
     refreshLibraryUI();
     renderSessions();
     renderPresetsTab();
+    maybeShowSwipeHint();
   }
   init();
 })();
