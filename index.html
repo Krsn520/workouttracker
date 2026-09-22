@@ -134,6 +134,28 @@
   .card h3{font-size:14px;font-weight:700;margin:0 0 14px 0;color:var(--text);}
   .subtle{font-size:12px;color:var(--text-faint);margin:-6px 0 14px;}
 
+  .ex-detail-tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:4px;margin-bottom:18px;}
+  .ex-detail-tab{flex:1;background:transparent;border:none;color:var(--text-dim);font-family:'Inter',sans-serif;
+    font-weight:700;font-size:13px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:.15s;}
+  .ex-detail-tab:hover{color:var(--text);}
+  .ex-detail-tab.active{background:var(--accent);color:#fff;}
+  .ex-detail-panel{display:none;}
+  .ex-detail-panel.active{display:block;}
+  .ex-detail-empty{font-size:13px;color:var(--text-faint);text-align:center;padding:28px 10px;}
+
+  .ex-history-row{display:flex;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px solid var(--border);}
+  .ex-history-row:last-child{border-bottom:none;}
+  .ex-history-date{font-size:12px;color:var(--text-faint);font-family:'IBM Plex Mono',monospace;width:78px;flex-shrink:0;}
+  .ex-history-stats{flex:1;font-size:13.5px;font-weight:600;}
+  .ex-history-stats .scheme{color:var(--accent-bright);font-weight:700;}
+  .ex-history-dot{width:8px;height:8px;border-radius:50%;background:var(--text-faint);flex-shrink:0;}
+  .ex-history-dot.done{background:#22c55e;}
+
+  .ex-record-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+  .ex-record-box .num{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--accent-bright);line-height:1;}
+  .ex-record-box .lbl{font-size:10.5px;color:var(--text-faint);font-weight:600;letter-spacing:0.3px;margin-top:6px;}
+  .ex-record-box .sub{font-size:11px;color:var(--text-faint);margin-top:4px;}
+
   /* today's workout header */
   .today-card{
     display:flex;align-items:center;gap:18px;background:var(--surface);border:1px solid var(--border);
@@ -240,6 +262,8 @@
   .row-name .n{font-weight:700;font-size:14.5px;white-space:normal;overflow-wrap:break-word;word-break:break-word;flex:1 1 160px;min-width:110px;
     transition:color .3s ease, opacity .3s ease;}
   .row-name .n.struck{text-decoration:line-through;text-decoration-color:var(--text-faint);text-decoration-thickness:2px;color:var(--text-faint);}
+  .ex-name-link{cursor:pointer;}
+  .ex-name-link:hover{color:var(--accent-bright);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px;}
   .row-tag{font-size:10.5px;font-weight:600;color:var(--text-dim);background:var(--surface-3);padding:3px 8px;border-radius:6px;letter-spacing:0.2px;}
   .row-stats{font-size:14px;color:var(--text-dim);white-space:nowrap;font-weight:500;}
   .row-stats .num{color:var(--text);font-weight:700;}
@@ -257,6 +281,21 @@
   .row-note{width:100%;font-size:11.5px;color:var(--text-faint);font-style:italic;margin-top:6px;padding-left:40px;}
   .row-actions{display:flex;gap:5px;flex-shrink:0;}
   .row-actions .icon-btn{width:38px;height:38px;border-radius:9px;}
+
+  .session-row.editing{background:var(--surface-3);border-color:var(--accent);}
+  .row-swipe-wrap.editing .session-row{transform:translateX(0) !important;}
+  .inline-edit-fields{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;}
+  .inline-edit-input{
+    width:64px;background:var(--bg);border:1.5px solid var(--accent);border-radius:8px;
+    color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;
+    padding:7px 8px;text-align:center;
+  }
+  .inline-edit-input:focus{outline:none;box-shadow:0 0 0 3px var(--accent-soft);}
+  .inline-edit-unit{font-size:12px;color:var(--text-faint);font-weight:600;}
+  .inline-edit-actions .inline-save{color:#22c55e;border-color:#22c55e;}
+  .inline-edit-actions .inline-save:hover{background:rgba(34,197,94,0.12);}
+  .inline-edit-actions .inline-cancel{color:var(--danger);border-color:var(--danger);}
+  .inline-edit-actions .inline-cancel:hover{background:rgba(239,68,68,0.12);}
 
   /* expandable row details (mobile) */
   .row-details{width:100%;}
@@ -315,6 +354,39 @@
     transition:.15s;margin-top:4px;
   }
   .edit-session-btn:hover{color:var(--text-dim);border-color:var(--text-faint);}
+
+  .history-section{margin-top:4px;}
+  .history-toggle{
+    display:flex;align-items:center;gap:10px;width:100%;background:transparent;border:none;
+    padding:14px 4px;cursor:pointer;color:var(--text-dim);font-family:'Inter',sans-serif;
+    font-weight:700;font-size:13.5px;letter-spacing:0.2px;
+  }
+  .history-toggle:hover{color:var(--text);}
+  .history-toggle::before, .history-toggle::after{content:"";flex:1;height:1px;background:var(--border);}
+  .history-count{
+    background:var(--surface-3);color:var(--text-faint);border-radius:20px;padding:2px 9px;
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:700;
+  }
+  .history-chevron{display:flex;transition:transform .2s;}
+  .history-toggle.expanded .history-chevron{transform:rotate(180deg);}
+  .history-body{display:flex;flex-direction:column;gap:0;}
+  .history-body.collapsed{display:none;}
+
+  .add-exercise-search-bar{display:flex;gap:8px;align-items:center;}
+  .add-exercise-input{flex:1;}
+  .add-exercise-close{flex-shrink:0;}
+  .add-exercise-results{max-height:260px;overflow-y:auto;margin-top:10px;border:1px solid var(--border);border-radius:11px;}
+  .add-exercise-results:empty{display:none;}
+  .add-exercise-result{
+    display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:transparent;border:none;
+    border-bottom:1px solid var(--border);padding:11px 12px;cursor:pointer;transition:.15s;color:var(--text);
+  }
+  .add-exercise-result:last-child{border-bottom:none;}
+  .add-exercise-result:hover{background:var(--surface-3);}
+  .add-exercise-result-text{flex:1;min-width:0;}
+  .add-exercise-result-name{font-weight:700;font-size:13.5px;}
+  .add-exercise-result-sub{font-size:11px;color:var(--text-faint);margin-top:1px;}
+  .add-exercise-result svg{stroke:var(--accent-bright);flex-shrink:0;}
 
   .start-choice-btn{
     display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--surface-2);
@@ -885,6 +957,26 @@
   </div>
 </div>
 
+<div class="modal-overlay hidden" id="exerciseDetailOverlay">
+  <div class="modal-panel" style="max-width:540px;">
+    <div class="modal-header">
+      <h2 id="exDetailTitle">Exercise</h2>
+      <button class="modal-close" id="exDetailCloseBtn"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+    </div>
+    <div class="ex-detail-tabs">
+      <button class="ex-detail-tab active" data-subtab="history">History</button>
+      <button class="ex-detail-tab" data-subtab="chart">Chart</button>
+      <button class="ex-detail-tab" data-subtab="records">Records</button>
+    </div>
+    <div class="ex-detail-panel active" id="exDetailHistory"></div>
+    <div class="ex-detail-panel" id="exDetailChartPanel">
+      <div class="chart-wrap"><canvas id="exDetailChart"></canvas></div>
+      <div class="subtle" id="exDetailChartCaption"></div>
+    </div>
+    <div class="ex-detail-panel" id="exDetailRecords"></div>
+  </div>
+</div>
+
 <nav class="bottomnav">
   <button data-tab="stats"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg><span>Stats</span></button>
   <button data-tab="summary" class="active primary"><svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5l11 11M4 8l4-4 3 3-4 4-3-3zm13 13l4-4-3-3-4 4 3 3zM9.5 5.5l1.8-1.8m3.2 15.6l1.8-1.8"></path></svg><span>Summary</span></button>
@@ -906,12 +998,15 @@
   let editingEntryId = null;
   let editingDefId = null, editingDefType = null;
   let editingPresetId = null;
-  let progressChart = null, volumeChart = null, cardioChart = null;
+  let progressChart = null, volumeChart = null, cardioChart = null, exDetailChart = null;
   const collapsedStateOverrides = {}; // dateKey -> explicit true/false; unset = use default
   function isSessionCollapsed(date){
     if(Object.prototype.hasOwnProperty.call(collapsedStateOverrides, date)) return collapsedStateOverrides[date];
     return date !== todayISO(); // collapse every day except today by default
   }
+  let historyCollapsed = true;
+  let addSearchDate = null;
+  let addSearchQuery = "";
 
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => document.querySelectorAll(sel);
@@ -1037,6 +1132,7 @@
     pencil: `<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>`,
     x: `<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>`,
     flame: `<path d="M12 2c1 3-3 4.5-3 8a3 3 0 0 0 6 0c0-1-.5-2-1-2.5 1.5 0 3 1.5 3 4a5 5 0 0 1-10 0c0-3.5 2-5 3.5-7.5C10.9 3.2 11.5 2.6 12 2z"></path>`,
+    plus: `<line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>`,
   };
   function icon(name, cls){ return `<svg class="${cls||'i'}" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg>`; }
   $("#presetChevron").innerHTML = icon("chevron","i-sm");
@@ -1113,6 +1209,48 @@
       [a[i],a[j]] = [a[j],a[i]];
     }
     return a;
+  }
+
+  function renderAddExerciseResults(date, query){
+    const box = document.getElementById("addExResults");
+    if(!box) return;
+    const q = query.trim().toLowerCase();
+    let matches = q ? exDefs.filter(d=> d.name.toLowerCase().includes(q)) : exDefs.slice();
+    matches = matches.slice(0, 20);
+    if(matches.length===0){
+      box.innerHTML = `<div class="ex-detail-empty">${q ? "No matching exercises" : "Your library is empty — add exercises in the Presets tab"}</div>`;
+      return;
+    }
+    box.innerHTML = matches.map(d=>{
+      const sub = d.type==="strength" ? escapeHtml(d.area || "Strength") : "Cardio";
+      return `<button type="button" class="add-exercise-result" data-def-id="${d.id}">
+        <div class="row-icon ${d.type==="cardio"?"cardio":""}">${icon(d.type==="cardio"?"clock":"dumbbell","i-sm")}</div>
+        <div class="add-exercise-result-text">
+          <div class="add-exercise-result-name">${escapeHtml(d.name)}</div>
+          <div class="add-exercise-result-sub">${sub}</div>
+        </div>
+        ${icon("plus","i-sm")}
+      </button>`;
+    }).join("");
+    box.querySelectorAll(".add-exercise-result").forEach(btn=>{
+      btn.addEventListener("click", ()=> quickAddFromSearch(date, btn.dataset.defId));
+    });
+  }
+
+  async function quickAddFromSearch(date, defId){
+    const d = exDefs.find(x=>String(x.id)===String(defId));
+    if(!d) return;
+    if(d.type==="strength"){
+      addEntryDirect({type:"strength", name:d.name, date, sets:d.sets||3, reps:d.reps||8, weight:d.weight||0, distance:0, time:0, area_display:d.area});
+    }else{
+      addEntryDirect({type:"cardio", name:d.name, date, sets:0, reps:0, weight:0, distance:d.distance||0, time:d.time||0});
+    }
+    await saveEntries();
+    addSearchQuery = "";
+    renderSessions();
+    toast(`Added ${d.name} to the session`);
+    const input = document.querySelector(`.add-exercise-search[data-date="${date}"] .add-exercise-input`);
+    if(input) input.focus();
   }
 
   async function generateOneMoreExercise(date){
@@ -1308,17 +1446,44 @@
   }
 
   // ---------- session rows ----------
+  let inlineEditId = null;
+
   function sessionRow(e, opts){
     opts = opts || {};
     const swipeable = !!opts.swipeable;
     const tag = e.type==="strength" ? escapeHtml(e.area_display || "") : "Cardio";
-    let statsHtml;
-    if(e.type==="strength"){
-      statsHtml = `<span class="num">${fmtNum(wLbToDisp(e.weight))} lbs</span><span class="stats-sep">–</span><span class="scheme">${e.reps}×${e.sets}</span>`;
+    const editing = swipeable && inlineEditId === e.id;
+    let statsHtml, actionsHtml;
+
+    if(editing){
+      if(e.type==="strength"){
+        statsHtml = `<div class="inline-edit-fields">
+          <input class="inline-edit-input" type="number" inputmode="decimal" step="any" min="0" data-field="weight" value="${fmtNum(wLbToDisp(e.weight))}"><span class="inline-edit-unit">lbs</span>
+          <input class="inline-edit-input" type="number" inputmode="numeric" step="1" min="1" data-field="reps" value="${e.reps}"><span class="inline-edit-unit">×</span>
+          <input class="inline-edit-input" type="number" inputmode="numeric" step="1" min="1" data-field="sets" value="${e.sets}">
+        </div>`;
+      }else{
+        statsHtml = `<div class="inline-edit-fields">
+          <input class="inline-edit-input" type="number" inputmode="decimal" step="any" min="0" data-field="distance" value="${fmtNum(dMiToDisp(e.distance))}"><span class="inline-edit-unit">km</span>
+          <input class="inline-edit-input" type="number" inputmode="decimal" step="any" min="0" data-field="time" value="${fmtNum(e.time)}"><span class="inline-edit-unit">min</span>
+        </div>`;
+      }
+      actionsHtml = `<div class="row-actions inline-edit-actions">
+        <button class="icon-btn inline-save" title="Save">${icon("check","i-sm")}</button>
+        <button class="icon-btn inline-cancel" title="Cancel">${icon("x","i-sm")}</button>
+      </div>`;
     }else{
-      const dist = dMiToDisp(e.distance);
-      const p = paceOf(e);
-      statsHtml = `<span class="num">${fmtNum(dist)} km</span><span class="stats-sep">–</span><span class="scheme">${fmtTime(e.time)}</span>` + (p? `<span class="pace">(${fmtTime(p)}/km)</span>` : "");
+      if(e.type==="strength"){
+        statsHtml = `<span class="num">${fmtNum(wLbToDisp(e.weight))} lbs</span><span class="stats-sep">–</span><span class="scheme">${e.reps}×${e.sets}</span>`;
+      }else{
+        const dist = dMiToDisp(e.distance);
+        const p = paceOf(e);
+        statsHtml = `<span class="num">${fmtNum(dist)} km</span><span class="stats-sep">–</span><span class="scheme">${fmtTime(e.time)}</span>` + (p? `<span class="pace">(${fmtTime(p)}/km)</span>` : "");
+      }
+      actionsHtml = `<div class="row-actions">
+        <button class="icon-btn edit" title="Edit">${icon("pencil","i-sm")}</button>
+        <button class="icon-btn del" title="Delete">${icon("x","i-sm")}</button>
+      </div>`;
     }
 
     const detailsHtml = swipeable
@@ -1328,21 +1493,18 @@
         </div>`
       : (e.note ? `<div class="row-note">"${escapeHtml(e.note)}"</div>` : "");
 
-    const rowMarkup = `<div class="session-row" data-id="${e.id}">
+    const rowMarkup = `<div class="session-row${editing?" editing":""}" data-id="${e.id}">
       <button class="check-circle ${e.done?"done":""}" title="Mark done">${icon("check")}</button>
       <div class="row-icon ${e.type==="cardio"?"cardio":""}">${icon(e.type==="cardio"?"clock":"dumbbell", "i-sm")}</div>
-      <div class="row-name"><span class="n${e.done?" struck":""}">${escapeHtml(e.name)}</span>${tag?`<span class="row-tag">${tag}</span>`:""}</div>
+      <div class="row-name"><span class="n ex-name-link${e.done?" struck":""}" data-ex-type="${e.type}" data-ex-name="${escapeHtml(e.name)}">${escapeHtml(e.name)}</span>${tag?`<span class="row-tag">${tag}</span>`:""}</div>
       <div class="row-stats stat-stack">${statsHtml}</div>
-      <div class="row-actions">
-        <button class="icon-btn edit" title="Edit">${icon("pencil","i-sm")}</button>
-        <button class="icon-btn del" title="Delete">${icon("x","i-sm")}</button>
-      </div>
+      ${actionsHtml}
       ${detailsHtml}
     </div>`;
 
     if(!swipeable) return rowMarkup;
 
-    return `<div class="row-swipe-wrap" data-id="${e.id}">
+    return `<div class="row-swipe-wrap${editing?" editing":""}" data-id="${e.id}">
       <div class="row-swipe-bg"><span>${icon("check","i-sm")}Complete</span></div>
       <div class="row-swipe-actions">
         <button class="swipe-act edit" title="Edit">${icon("pencil","i-sm")}<span>Edit</span></button>
@@ -1358,7 +1520,187 @@
       row.querySelector(".edit").addEventListener("click", ()=> loadEntryIntoForm(id));
       row.querySelector(".del").addEventListener("click", ()=> deleteEntry(id, onChange));
       row.querySelector(".check-circle").addEventListener("click", ()=> toggleDone(id, onChange));
+      const nameLink = row.querySelector(".ex-name-link");
+      if(nameLink){
+        nameLink.addEventListener("click", (ev)=>{
+          ev.stopPropagation();
+          openExerciseDetail(nameLink.dataset.exType, nameLink.dataset.exName);
+        });
+      }
     });
+  }
+
+  // ---------- exercise detail view (History / Chart / Records) ----------
+  let exDetailContext = null; // {type, name}
+  const exerciseDetailOverlay = $("#exerciseDetailOverlay");
+
+  function openExerciseDetail(type, name){
+    exDetailContext = {type, name};
+    $("#exDetailTitle").textContent = name;
+    $$(".ex-detail-tab").forEach(t=> t.classList.toggle("active", t.dataset.subtab==="history"));
+    $$(".ex-detail-panel").forEach(p=> p.classList.remove("active"));
+    $("#exDetailHistory").classList.add("active");
+    renderExDetailHistory();
+    exerciseDetailOverlay.classList.remove("hidden");
+  }
+  function closeExerciseDetail(){
+    exerciseDetailOverlay.classList.add("hidden");
+    if(exDetailChart){ exDetailChart.destroy(); exDetailChart = null; }
+  }
+  $("#exDetailCloseBtn").addEventListener("click", closeExerciseDetail);
+  exerciseDetailOverlay.addEventListener("click", (e)=>{ if(e.target === exerciseDetailOverlay) closeExerciseDetail(); });
+
+  $$(".ex-detail-tab").forEach(tabBtn=>{
+    tabBtn.addEventListener("click", ()=>{
+      const sub = tabBtn.dataset.subtab;
+      $$(".ex-detail-tab").forEach(t=> t.classList.toggle("active", t===tabBtn));
+      $$(".ex-detail-panel").forEach(p=> p.classList.remove("active"));
+      if(sub==="history"){ $("#exDetailHistory").classList.add("active"); renderExDetailHistory(); }
+      else if(sub==="chart"){ $("#exDetailChartPanel").classList.add("active"); renderExDetailChart(); }
+      else{ $("#exDetailRecords").classList.add("active"); renderExDetailRecords(); }
+    });
+  });
+
+  function renderExDetailHistory(){
+    if(!exDetailContext) return;
+    const {type, name} = exDetailContext;
+    const box = $("#exDetailHistory");
+    const rows = entries.filter(e=>e.type===type && e.name===name).sort((a,b)=> b.date.localeCompare(a.date) || b.created-a.created);
+    if(rows.length===0){ box.innerHTML = `<div class="ex-detail-empty">No history logged for this exercise yet</div>`; return; }
+    box.innerHTML = rows.map(e=>{
+      const stats = type==="strength"
+        ? `<span class="num">${fmtNum(wLbToDisp(e.weight))} lbs</span> <span class="scheme">${e.reps}×${e.sets}</span>`
+        : `<span class="num">${fmtNum(dMiToDisp(e.distance))} km</span> <span class="scheme">${fmtTime(e.time)}</span>`;
+      return `<div class="ex-history-row">
+        <span class="ex-history-dot${e.done?" done":""}" title="${e.done?"Complete":"Not marked complete"}"></span>
+        <span class="ex-history-date">${formatShort(e.date)}</span>
+        <span class="ex-history-stats">${stats}</span>
+      </div>`;
+    }).join("");
+  }
+
+  function renderExDetailChart(){
+    if(!exDetailContext) return;
+    const {type, name} = exDetailContext;
+    const ctx = $("#exDetailChart").getContext("2d");
+    const caption = $("#exDetailChartCaption");
+    const rows = doneEntries().filter(e=>e.type===type && e.name===name).sort((a,b)=>a.date.localeCompare(b.date));
+    if(exDetailChart){ exDetailChart.destroy(); exDetailChart = null; }
+    if(rows.length===0){ caption.textContent = "No completed sets logged yet"; return; }
+
+    let labels, data, label, schemes = [];
+    if(type==="strength"){
+      const byDate = {};
+      rows.forEach(e=>{
+        const est = est1RM(wLbToDisp(e.weight), e.reps);
+        if(!byDate[e.date] || est>byDate[e.date].value){ byDate[e.date] = {value:est, reps:e.reps, sets:e.sets, weight:wLbToDisp(e.weight)}; }
+      });
+      labels = Object.keys(byDate).sort();
+      data = labels.map(d=>Math.round(byDate[d].value*10)/10);
+      schemes = labels.map(d=>`Logged as (${byDate[d].reps}×${byDate[d].sets}) @ ${fmtNum(byDate[d].weight)}lb`);
+      label = "Est. 1RM (lb)";
+      caption.textContent = "";
+    }else{
+      const byDate = {};
+      rows.forEach(e=>{
+        const distDisp = dMiToDisp(e.distance);
+        if(distDisp>0) byDate[e.date] = e.time/distDisp;
+      });
+      labels = Object.keys(byDate).sort();
+      data = labels.map(d=>Math.round(byDate[d]*100)/100);
+      label = "Pace (min/km)";
+      caption.textContent = "";
+    }
+
+    exDetailChart = new Chart(ctx, {
+      type: "line",
+      data:{ labels: labels.map(formatShort), datasets:[{
+        label, data,
+        borderColor: type==="strength" ? "#5b7cfa" : "#a78bfa",
+        backgroundColor: type==="strength" ? "rgba(91,124,250,0.15)" : "rgba(167,139,250,0.15)",
+        pointBackgroundColor: type==="strength" ? "#5b7cfa" : "#a78bfa",
+        tension:0.3, fill:true,
+      }]},
+      options: chartOptions(
+        type==="strength" ? `Estimated 1RM — ${name}` : `Pace — ${name}`,
+        type==="strength" ? (i)=>schemes[i] : null
+      )
+    });
+  }
+
+  function renderExDetailRecords(){
+    if(!exDetailContext) return;
+    const {type, name} = exDetailContext;
+    const box = $("#exDetailRecords");
+    const rows = doneEntries().filter(e=>e.type===type && e.name===name);
+    if(rows.length===0){ box.innerHTML = `<div class="ex-detail-empty">No completed sets logged yet</div>`; return; }
+
+    if(type==="strength"){
+      let bestWeight = rows[0], best1RM = {row:rows[0], value:est1RM(wLbToDisp(rows[0].weight), rows[0].reps)};
+      const volByDate = {};
+      rows.forEach(e=>{
+        if(e.weight > bestWeight.weight) bestWeight = e;
+        const est = est1RM(wLbToDisp(e.weight), e.reps);
+        if(est > best1RM.value) best1RM = {row:e, value:est};
+        volByDate[e.date] = (volByDate[e.date]||0) + volumeOf(e);
+      });
+      let bestVolDate = Object.keys(volByDate)[0];
+      Object.keys(volByDate).forEach(d=>{ if(volByDate[d] > volByDate[bestVolDate]) bestVolDate = d; });
+      const sessionDays = new Set(rows.map(e=>e.date)).size;
+
+      box.innerHTML = `<div class="stat-grid" style="margin-bottom:0;">
+        <div class="ex-record-box">
+          <div class="num">${fmtNum(wLbToDisp(bestWeight.weight))}<span style="font-size:13px;">lbs</span></div>
+          <div class="lbl">Heaviest Set</div>
+          <div class="sub">${bestWeight.reps}×${bestWeight.sets} · ${formatShort(bestWeight.date)}</div>
+        </div>
+        <div class="ex-record-box">
+          <div class="num">${fmtNum(Math.round(best1RM.value*10)/10)}<span style="font-size:13px;">lbs</span></div>
+          <div class="lbl">Best Est. 1RM</div>
+          <div class="sub">${best1RM.row.reps}×${best1RM.row.sets} @ ${fmtNum(wLbToDisp(best1RM.row.weight))}lb · ${formatShort(best1RM.row.date)}</div>
+        </div>
+        <div class="ex-record-box">
+          <div class="num">${fmtNum(Math.round(wLbToDisp(volByDate[bestVolDate])))}</div>
+          <div class="lbl">Best Session Volume</div>
+          <div class="sub">${formatShort(bestVolDate)}</div>
+        </div>
+        <div class="ex-record-box">
+          <div class="num">${sessionDays}</div>
+          <div class="lbl">Days Logged</div>
+        </div>
+      </div>`;
+    }else{
+      let bestPaceRow = null, bestPace = Infinity, longestDist = rows[0], longestTime = rows[0];
+      rows.forEach(e=>{
+        const p = paceOf(e);
+        if(p!==null && p < bestPace){ bestPace = p; bestPaceRow = e; }
+        if(e.distance > longestDist.distance) longestDist = e;
+        if(e.time > longestTime.time) longestTime = e;
+      });
+      const sessionDays = new Set(rows.map(e=>e.date)).size;
+
+      box.innerHTML = `<div class="stat-grid" style="margin-bottom:0;">
+        <div class="ex-record-box">
+          <div class="num">${bestPaceRow? fmtTime(bestPace) : "—"}</div>
+          <div class="lbl">Best Pace (min/km)</div>
+          <div class="sub">${bestPaceRow? formatShort(bestPaceRow.date) : ""}</div>
+        </div>
+        <div class="ex-record-box">
+          <div class="num">${fmtNum(dMiToDisp(longestDist.distance))}<span style="font-size:13px;">km</span></div>
+          <div class="lbl">Longest Distance</div>
+          <div class="sub">${formatShort(longestDist.date)}</div>
+        </div>
+        <div class="ex-record-box">
+          <div class="num">${fmtTime(longestTime.time)}</div>
+          <div class="lbl">Longest Duration</div>
+          <div class="sub">${formatShort(longestTime.date)}</div>
+        </div>
+        <div class="ex-record-box">
+          <div class="num">${sessionDays}</div>
+          <div class="lbl">Days Logged</div>
+        </div>
+      </div>`;
+    }
   }
 
   // ---------- swipe gestures (mobile session rows) ----------
@@ -1389,7 +1731,8 @@
 
       row.addEventListener("touchstart", (ev)=>{
         if(!window.matchMedia("(max-width:700px)").matches) return;
-        if(ev.target.closest(".check-circle") || ev.target.closest(".row-actions")) return;
+        if(wrap.classList.contains("editing")) return;
+        if(ev.target.closest(".check-circle") || ev.target.closest(".row-actions") || ev.target.closest(".ex-name-link")) return;
         closeOtherSwipeRows(wrap);
         const t = ev.touches[0];
         startX = t.clientX; startY = t.clientY; dx = 0; dragging = true; horizontal = null;
@@ -1561,12 +1904,47 @@
     renderLoggedList();
   }
 
-  // startEdit: opens the modal (from a session card pencil icon) pre-loaded for that entry
-  function startEdit(id){
-    const e = entries.find(x=>x.id===id);
-    if(!e) return;
-    openModal(e.date, {expandPreset:false});
-    loadEntryIntoForm(id);
+  // ---------- inline row editing (Summary tab) ----------
+  function beginInlineEdit(id){
+    closeAllSwipeRows();
+    inlineEditId = id;
+    renderSessions();
+    const input = document.querySelector(`.session-row[data-id="${id}"] .inline-edit-input`);
+    if(input){ input.focus(); input.select(); }
+  }
+
+  function cancelInlineEdit(){
+    inlineEditId = null;
+    renderSessions();
+  }
+
+  async function saveInlineEdit(id){
+    const idx = entries.findIndex(x=>x.id===id);
+    if(idx<0){ inlineEditId = null; renderSessions(); return; }
+    const row = document.querySelector(`.session-row[data-id="${id}"]`);
+    if(!row){ inlineEditId = null; renderSessions(); return; }
+    const e = entries[idx];
+
+    if(e.type==="strength"){
+      const w = parseFloat(row.querySelector('[data-field="weight"]').value);
+      const reps = parseFloat(row.querySelector('[data-field="reps"]').value);
+      const sets = parseFloat(row.querySelector('[data-field="sets"]').value);
+      if(isNaN(w) || w<0 || !reps || reps<1 || !sets || sets<1){ toast("Fill in reps, sets, and weight"); return; }
+      entries[idx] = {...e, weight: wDispToLb(w), reps, sets};
+    }else{
+      const dist = parseFloat(row.querySelector('[data-field="distance"]').value);
+      const time = parseFloat(row.querySelector('[data-field="time"]').value);
+      if(isNaN(dist) || dist<0 || isNaN(time) || time<0){ toast("Fill in distance and time"); return; }
+      entries[idx] = {...e, distance: dDispToMi(dist), time};
+    }
+
+    await saveEntries();
+    inlineEditId = null;
+    renderSessions();
+    toast("Set updated");
+    if(entries[idx].type==="strength"){
+      await maybeOfferPresetUpdate(entries[idx], {requireImprovement:false});
+    }
   }
 
   async function deleteEntry(id, onChange){
@@ -1653,9 +2031,11 @@
     const groups = {};
     entries.forEach(e=>{ (groups[e.date]=groups[e.date]||[]).push(e); });
     const dateKeys = Object.keys(groups).sort((a,b)=>b.localeCompare(a));
+    const todayKey = todayISO();
+    const historyKeys = dateKeys.filter(d=>d!==todayKey);
 
-    container.innerHTML = dateKeys.map(date=>{
-      const rows = groups[date];
+    function dayCardHtml(date){
+      const rows = groups[date].slice().sort((a,b)=> (a.done?1:0) - (b.done?1:0));
       const strengthCount = rows.filter(r=>r.type==="strength").length;
       const cardioCount = rows.filter(r=>r.type==="cardio").length;
       const collapsed = isSessionCollapsed(date);
@@ -1677,13 +2057,43 @@
         </div>
         <div class="session-body ${collapsed?"collapsed":""}">
           ${rows.map(r=>sessionRow(r,{swipeable:true})).join("")}
-          <div style="display:flex;gap:8px;">
-            <button class="edit-session-btn" data-date="${date}" style="flex:1;">Edit Session Details</button>
-            <button class="edit-session-btn generate-more-btn" data-date="${date}" style="flex:1;">Generate another exercise</button>
-          </div>
+          ${addSearchDate===date ? `
+          <div class="add-exercise-search" data-date="${date}">
+            <div class="add-exercise-search-bar">
+              <input type="text" class="add-exercise-input" placeholder="Search exercises to add…" value="${escapeHtml(addSearchQuery)}" autocomplete="off">
+              <button type="button" class="icon-btn add-exercise-close" title="Close">${icon("x","i-sm")}</button>
+            </div>
+            <div class="add-exercise-results" id="addExResults"></div>
+          </div>` : `
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="edit-session-btn" data-date="${date}" style="flex:1;min-width:130px;">Edit Session Details</button>
+            <button class="edit-session-btn generate-more-btn" data-date="${date}" style="flex:1;min-width:130px;">Generate another exercise</button>
+            <button class="edit-session-btn add-exercise-btn" data-date="${date}" style="flex:1;min-width:130px;">+ Add Exercise</button>
+          </div>`}
         </div>
       </div>`;
-    }).join("");
+    }
+
+    let html = "";
+    if(dateKeys.includes(todayKey)) html += dayCardHtml(todayKey);
+    if(historyKeys.length>0){
+      html += `<div class="history-section">
+        <button type="button" class="history-toggle ${historyCollapsed?"":"expanded"}" id="historyToggleBtn">
+          <span>History</span>
+          <span class="history-count">${historyKeys.length}</span>
+          <span class="history-chevron">${icon("chevron","i-sm")}</span>
+        </button>
+        <div class="history-body ${historyCollapsed?"collapsed":""}">
+          ${historyKeys.map(dayCardHtml).join("")}
+        </div>
+      </div>`;
+    }
+    container.innerHTML = html;
+
+    $("#historyToggleBtn")?.addEventListener("click", ()=>{
+      historyCollapsed = !historyCollapsed;
+      renderSessions();
+    });
 
     container.querySelectorAll(".session-card").forEach(card=>{
       const date = card.dataset.date;
@@ -1693,12 +2103,35 @@
         renderSessions();
       });
       card.querySelector(".del-day").addEventListener("click", (e)=>{ e.stopPropagation(); deleteDay(date); });
-      card.querySelector(".edit-session-btn:not(.generate-more-btn)").addEventListener("click", ()=> openModal(date, {expandPreset:false}));
-      card.querySelector(".generate-more-btn").addEventListener("click", (e)=>{ e.stopPropagation(); generateOneMoreExercise(date); });
+      card.querySelector(".edit-session-btn:not(.generate-more-btn):not(.add-exercise-btn)")?.addEventListener("click", ()=> openModal(date, {expandPreset:false}));
+      card.querySelector(".generate-more-btn")?.addEventListener("click", (e)=>{ e.stopPropagation(); generateOneMoreExercise(date); });
+      card.querySelector(".add-exercise-btn")?.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        addSearchDate = date;
+        addSearchQuery = "";
+        renderSessions();
+      });
+      const searchWrap = card.querySelector(".add-exercise-search");
+      if(searchWrap){
+        renderAddExerciseResults(date, addSearchQuery);
+        const input = searchWrap.querySelector(".add-exercise-input");
+        input.addEventListener("click", (e)=> e.stopPropagation());
+        input.addEventListener("input", (e)=>{
+          addSearchQuery = e.target.value;
+          renderAddExerciseResults(date, addSearchQuery);
+        });
+        input.addEventListener("keydown", (e)=>{ if(e.key==="Escape"){ addSearchDate=null; renderSessions(); } });
+        input.focus();
+        searchWrap.querySelector(".add-exercise-close").addEventListener("click", (e)=>{
+          e.stopPropagation();
+          addSearchDate = null;
+          renderSessions();
+        });
+      }
       card.querySelectorAll(".session-row .edit").forEach(btn=>{
         btn.addEventListener("click", (ev)=>{
           const id = ev.target.closest(".session-row").dataset.id;
-          startEdit(id);
+          beginInlineEdit(id);
         });
       });
       card.querySelectorAll(".session-row .del").forEach(btn=>{
@@ -1716,8 +2149,7 @@
       card.querySelectorAll(".row-swipe-actions .edit").forEach(btn=>{
         btn.addEventListener("click", (ev)=>{
           const id = ev.target.closest(".row-swipe-wrap").dataset.id;
-          closeAllSwipeRows();
-          startEdit(id);
+          beginInlineEdit(id);
         });
       });
       card.querySelectorAll(".row-swipe-actions .del").forEach(btn=>{
@@ -1725,6 +2157,29 @@
           const id = ev.target.closest(".row-swipe-wrap").dataset.id;
           closeAllSwipeRows();
           deleteEntry(id);
+        });
+      });
+      card.querySelectorAll(".inline-save").forEach(btn=>{
+        btn.addEventListener("click", (ev)=>{
+          const id = ev.target.closest(".session-row").dataset.id;
+          saveInlineEdit(id);
+        });
+      });
+      card.querySelectorAll(".inline-cancel").forEach(btn=>{
+        btn.addEventListener("click", ()=> cancelInlineEdit());
+      });
+      card.querySelectorAll(".inline-edit-input").forEach(input=>{
+        input.addEventListener("click", (ev)=> ev.stopPropagation());
+        input.addEventListener("keydown", (ev)=>{
+          const id = ev.target.closest(".session-row").dataset.id;
+          if(ev.key==="Enter"){ ev.preventDefault(); saveInlineEdit(id); }
+          else if(ev.key==="Escape"){ ev.preventDefault(); cancelInlineEdit(); }
+        });
+      });
+      card.querySelectorAll(".ex-name-link").forEach(link=>{
+        link.addEventListener("click", (ev)=>{
+          ev.stopPropagation();
+          openExerciseDetail(link.dataset.exType, link.dataset.exName);
         });
       });
     });
