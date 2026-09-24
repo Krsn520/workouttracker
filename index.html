@@ -166,6 +166,7 @@
   .today-ring-labels-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;}
   .ring-label-line{stroke:#fff;stroke-width:1.4;opacity:0.85;}
   .ring-label-text{fill:#fff;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;}
+  .ring-label-sub{font-weight:600;opacity:0.85;}
   .today-action-circle{
     position:absolute;top:26%;left:26%;width:48%;height:48%;border-radius:50%;overflow:hidden;
     display:flex;box-shadow:0 10px 28px rgba(0,0,0,0.4);
@@ -176,8 +177,9 @@
     padding:8px 6px;transition:.15s;line-height:1.25;
   }
   .today-action-circle.has-workout{align-items:flex-end;}
-  .today-action-circle.has-workout .today-half-btn{height:50%;gap:4px;padding-bottom:12%;font-size:10.5px;}
-  .today-action-circle.has-workout .today-half-btn svg{width:19px;height:19px;}
+  .today-action-circle.has-workout .today-half-btn{height:50%;gap:0;padding-bottom:16%;font-size:10.5px;}
+  .today-action-circle.has-workout .today-half-btn span{display:none;}
+  .today-action-circle.has-workout .today-half-btn svg{width:24px;height:24px;}
   .today-progress-overlay{
     display:none;position:absolute;top:0;left:0;width:100%;height:50%;flex-direction:column;
     align-items:center;justify-content:center;pointer-events:none;z-index:2;padding:0 8px;
@@ -621,11 +623,11 @@
             <div class="today-progress-pct" id="todayProgressPct">0%</div>
             <div class="today-progress-count" id="todayProgressCount">0 of 0 complete</div>
           </div>
-          <button type="button" class="today-half-btn today-half-manual" id="chooseManualHeroBtn">
+          <button type="button" class="today-half-btn today-half-manual" id="chooseManualHeroBtn" title="Fill in Manually">
             <svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             <span>Fill in Manually</span>
           </button>
-          <button type="button" class="today-half-btn today-half-generate" id="chooseGenerateHeroBtn">
+          <button type="button" class="today-half-btn today-half-generate" id="chooseGenerateHeroBtn" title="Generate Workout">
             <svg class="i" viewBox="0 0 24 24" fill="none" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
             <span>Generate Workout</span>
           </button>
@@ -2031,11 +2033,15 @@
         const anchor = sin >= 0 ? "start" : "end";
 
         let name = e.name.length>16 ? e.name.slice(0,15)+"…" : e.name;
-        const stat = e.type==="strength" ? `${e.reps}×${e.sets}` : `${fmtNum(dMiToDisp(e.distance))}km`;
-        const label = `${name}: ${stat}`;
+        const stat = e.type==="strength"
+          ? `${fmtNum(wLbToDisp(e.weight))} × ${e.reps} × ${e.sets}`
+          : `${fmtNum(dMiToDisp(e.distance))}km`;
 
         labelHtml += `<line class="ring-label-line" x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"></line>
-          <text class="ring-label-text" x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="${anchor}" dominant-baseline="middle">${escapeHtml(label)}</text>`;
+          <text class="ring-label-text" x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="${anchor}">
+            <tspan x="${tx.toFixed(1)}" dy="-0.3em">${escapeHtml(name)}</tspan>
+            <tspan x="${tx.toFixed(1)}" dy="1.2em" class="ring-label-sub">${escapeHtml(stat)}</tspan>
+          </text>`;
       });
       segGroup.innerHTML = segHtml;
       labelGroup.innerHTML = labelHtml;
